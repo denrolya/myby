@@ -1,12 +1,11 @@
 'use strict';
-
 /* jshint -W098 */
-// The Package is past automatically as first parameter
-module.exports = function(Myby, app, auth, database) {
 
-  app.get('/api/myby/example/anyone', function(req, res, next) {
-    res.send('Anyone can access this');
-  });
+// The Package is past automatically as first parameter
+module.exports = function(Myby, app, auth) {
+  var myby = require('../controllers/myby')(Myby);
+
+  app.route('/api/transactions').get(myby.all);
 
   app.get('/api/myby/example/auth', auth.requiresLogin, function(req, res, next) {
     res.send('Only authenticated users can access this');
