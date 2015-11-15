@@ -5,7 +5,8 @@
 module.exports = function(Myby, app, auth) {
   var myby = require('../controllers/myby')(Myby);
 
-  app.route('/api/transactions').get(myby.all);
+  app.route('/api/transactions').get(myby.all)
+      .post(myby.create);
 
   app.get('/api/myby/example/auth', auth.requiresLogin, function(req, res, next) {
     res.send('Only authenticated users can access this');
@@ -16,10 +17,8 @@ module.exports = function(Myby, app, auth) {
   });
 
   app.get('/api/myby/example/render', function(req, res, next) {
-    Myby.render('index', {
-      package: 'myby'
-    }, function(err, html) {
-      //Rendering a view from the Package server/views
+    Myby.render('index', {package: 'myby'}, function(err, html) {
+      //Rendering a view from the Packages server/views
       res.send(html);
     });
   });

@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('mean.myby').factory('Myby', ['$resource',
+angular.module('mean.myby').factory('Transactions', ['$resource',
   function($resource) {
-    return $resource('api/circles/:name', {
+    return $resource('api/transactions/:name', {
       name: '@name'
     }, {
       update: {
@@ -15,7 +15,7 @@ angular.module('mean.myby').factory('Myby', ['$resource',
       },
       all: {
         method: 'GET',
-        isArray: false,
+        isArray: true,
         url: '/api/transactions'
       }
     });

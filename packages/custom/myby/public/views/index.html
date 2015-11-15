@@ -1,27 +1,26 @@
-<div class="" data-ng-controller="MybyController">
-  <h1>Example view from your new awesome package</h1>
-  <h2>Package: {{package.name}}</h2>
-  <ol>
-    <li>
-      <a href="/api/myby/example/anyone" target="_self">Server route that anyone can access</a>
-    </li>
-    <li>
-      <a href="/api/myby/example/auth" target="_self">Server route that requires authentication</a>
-    </li>
-    <li>
-      <a href="/api/myby/example/admin" target="_self">Server route that requires admin user</a>
-    </li>
-    <li>
-      <a href="/api/myby/example/render" target="_self">Raw Html rendering example from using swig</a>
-    </li>
-  </ol>
-  <h3><img src="/myby/assets/img/logo.png" /></h3>
-  </br>
-  <p class="alert alert-info">You can find your package in /packages/myby</p>
-  </br>
-  <p class="alert alert-warning">MEAN versions prior to 0.3.2 will be in /node_modules/myby</p>
-  </br>
-  <h3><a href="http://learn.mean.io">Documentation</a></h3>
-  </br>
-</div>
+<div ng-controller="MybyController as vm">
+    <h1>My transactions</h1>
 
+    <div class="row">
+        <div class="col-md-10">
+            <table class="table table-hover table-stripped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Created</th>
+                        <th>Updated</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="transaction in vm.transactions">
+                        <td>{{ transaction.name }}</td>
+                        <td>{{ transaction.description }}</td>
+                        <td>{{ transaction.created | date : 'yyyy-MM-dd' }}</td>
+                        <td>{{ transaction.updated | date : 'yyyy-MM-dd' }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
