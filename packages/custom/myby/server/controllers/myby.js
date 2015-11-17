@@ -3,14 +3,14 @@
 var mean = require('meanio'),
     mongoose = require('mongoose'),
     Transaction = mongoose.model('Transaction'),
-    fs = require('fs'),
-    readline = require('readline'),
-    csv = require('fast-csv');
+    csv = require('fast-csv'),
+    url = require('url');
 
 module.exports = function(Myby){
     return {
         all:function(req,res) {
-            Transaction.find().exec(function (err, transactions) {
+            var requestParams = url.parse(req.url, true).query;
+            Transaction.find().skip(requestParams.perPage * (requestParams.pageNum - 1)).limit(requestParams.perPage).exec(function (err, transactions) {
                 if (err) {
                     console.log(err);
                 } else {
@@ -31,6 +31,11 @@ module.exports = function(Myby){
                 }
 
                 res.json(transaction);
+            });
+        },
+        count: function(req,res) {
+            Transaction.count().exec(function (err, totalCount) {
+                res.json({totalCount: totalCount});
             });
         },
         parseCSV: function(req, res) {

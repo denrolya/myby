@@ -5,8 +5,11 @@
 module.exports = function(Myby, app, auth) {
   var myby = require('../controllers/myby')(Myby);
 
-  app.route('/api/transactions').get(myby.all)
+  app.route('/api/transactions')
+      .get(myby.all)
       .post(myby.create);
+
+  app.route('/api/transactions/count').get(myby.count);
 
   app.get('/api/myby/example/auth', auth.requiresLogin, function(req, res, next) {
     res.send('Only authenticated users can access this');
