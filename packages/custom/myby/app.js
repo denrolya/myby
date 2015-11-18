@@ -25,6 +25,7 @@ Myby.register(function(app, auth, database) {
   });
   
   Myby.aggregateAsset('css', 'myby.css');
+  Myby.aggregateAsset('css', 'font-awesome.min.css');
 
   /**
     //Uncomment to use. Requires meanio@0.3.7 or above

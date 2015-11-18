@@ -2,6 +2,13 @@
     <h1>My transactions</h1>
 
     <div class="row">
+        <div class="form-group">
+            <div class="input-group">
+                <div class="input-group-addon"><i class="fa fa-search"></i></div>
+                <input type="text" class="form-control" placeholder="Filter by comment" ng-model="vm.sortingParams.filterQuery">
+            </div>
+        </div>
+
         <select
                 class="form-control"
                 ng-model="vm.pagination.perPage"
@@ -28,20 +35,36 @@
                 <thead>
                     <tr>
                         <th>Account Number</th>
-                        <th>Amount</th>
-                        <th>Date from</th>
-                        <th>Date to</th>
-                        <th>Remainder</th>
+                        <th>
+                            <a href="#" ng-click="vm.orderBy('amount')">
+                                Amount
+                                <span ng-show="vm.sortingParams.type == 'amount' && !vm.sortingParams.reverse" class="fa fa-caret-down"></span>
+                                <span ng-show="vm.sortingParams.type == 'amount' && vm.sortingParams.reverse" class="fa fa-caret-up"></span>
+                            </a>
+                        </th>
+                        <th>
+                            <a href="#" ng-click="vm.orderBy('dateTo')">
+                                Date
+                                <span ng-show="vm.sortingParams.type == 'dateTo' && !vm.sortingParams.reverse" class="fa fa-caret-down"></span>
+                                <span ng-show="vm.sortingParams.type == 'dateTo' && vm.sortingParams.reverse" class="fa fa-caret-up"></span>
+                            </a>
+                        </th>
+                        <th>
+                            <a href="#" ng-click="vm.orderBy('balance')">
+                                Remainder
+                                <span ng-show="vm.sortingParams.type == 'balance' && !vm.sortingParams.reverse" class="fa fa-caret-down"></span>
+                                <span ng-show="vm.sortingParams.type == 'balance' && vm.sortingParams.reverse" class="fa fa-caret-up"></span>
+                            </a>
+                        </th>
                         <th>Issuer</th>
                         <th>Comments</th>
                         <th>Comments</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="transaction in vm.transactions">
+                    <tr ng-repeat="transaction in vm.transactions | filter:vm.sortingParams.filterQuery">
                         <td>{{ transaction.accountNumber }}</td>
                         <td>{{ transaction.amount | number }} {{ transaction.currency == "HUF" ? "ft." : transaction.currency }}</td>
-                        <td>{{ transaction.dateFrom | date : 'yyyy-MM-dd' }}</td>
                         <td>{{ transaction.dateTo | date : 'yyyy-MM-dd' }}</td>
                         <td>{{ transaction.balance | number }} {{ transaction.currency == "HUF" ? "ft." : transaction.currency }}</td>
                         <td>{{ transaction.issuersCode }} {{ transaction.issuersName }}</td>

@@ -14,7 +14,7 @@ angular.module('mean.myby').factory('Transactions', ['$resource',
       all: {
         method: 'GET',
         isArray: true,
-        url: '/api/transactions?perPage=:perPage&pageNum=:pageNum',
+        url: '/api/transactions?ppc=:perPage&pn=:pageNum&sb=:sortBy&r=:reverse?fq=:filterQuery',
       },
       count: {
         method: 'GET',
