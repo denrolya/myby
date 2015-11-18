@@ -10,13 +10,23 @@ module.exports = function(Myby){
     return {
         all:function(req,res) {
             var requestParams = url.parse(req.url, true).query;
-            Transaction.find().skip(requestParams.perPage * (requestParams.pageNum - 1)).limit(requestParams.perPage).exec(function (err, transactions) {
-                if (err) {
-                    console.log(err);
-                } else {
-                    res.json(transactions);
-                }
-            });
+
+            var sortQuery = {};
+            sortQuery[requestParams.sb] = requestParams.r == 'true' ? 1 : -1;
+
+            Transaction
+                .find({}, null, {
+                    skip: (requestParams.ppc * (requestParams.pn - 1)),
+                    limit: requestParams.ppc,
+                    sort: sortQuery
+                })
+                .exec(function (err, transactions) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        res.json(transactions);
+                    }
+                });
         },
         create: function(req, res) {
             var transaction = new Transaction(req.body);
@@ -40,9 +50,10 @@ module.exports = function(Myby){
         },
         parseCSV: function(req, res) {
             var file = __dirname + "/../august.csv";
+            var headers = ["accountNumber", "type", "amount", "currency", "dateFrom", "dateTo", "balance", "issuersCode", "issuersName", "comment1", "comment2", "someDate", "comment"];
 
             csv
-                .fromPath(file, { headers: true, delimiter : ';', quote : '"'})
+                .fromPath(file, { headers: headers, delimiter: ';', quote: '"'})
                 .on("data", function(data){
                     data.amount = Number(data.amount);
                     data.dateFrom = parseDate(data.dateFrom);

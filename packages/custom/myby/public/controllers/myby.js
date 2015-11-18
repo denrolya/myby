@@ -13,6 +13,12 @@ angular.module('mean.myby').controller('MybyController', ['$scope', 'Global', 'T
       totalItems: 0
     };
 
+    vm.sortingParams = {
+      type: 'dateTo',
+      reverse: true,
+      filterQuery: ''
+    };
+
     vm.transactions = [];
 
     vm.getTransactions = getTransactions;
@@ -20,9 +26,23 @@ angular.module('mean.myby').controller('MybyController', ['$scope', 'Global', 'T
     vm.pageChanged = pageChanged;
     vm.create = create;
     vm.transactionsCount = transactionsCount;
+    vm.orderBy = orderBy;
 
     vm.transactionsCount();
     vm.getTransactions();
+
+    function orderBy(field) {
+
+      if (vm.sortingParams.type != field) {
+        vm.pagination.currentPage = 1;
+        vm.sortingParams.reverse = true;
+        vm.sortingParams.type = field;
+      } else {
+        vm.sortingParams.reverse = !vm.sortingParams.reverse;
+      }
+
+      vm.getTransactions();
+    }
 
     function transactionsCount() {
       Transactions.count(function(response) {
@@ -51,8 +71,9 @@ angular.module('mean.myby').controller('MybyController', ['$scope', 'Global', 'T
     };
 
     function getTransactions() {
-      Transactions.all({perPage: vm.pagination.perPage, pageNum: vm.pagination.currentPage }, function(transactions) {
-        vm.transactions = transactions;
+      var params = {perPage: vm.pagination.perPage, pageNum: vm.pagination.currentPage, sortBy: vm.sortingParams.type, reverse: vm.sortingParams.reverse };
+      Transactions.all(params, function(transactions) {
+            vm.transactions = transactions;
       });
     }
   }
