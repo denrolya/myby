@@ -2,7 +2,7 @@
 
 angular.module('mean.myby').factory('Transactions', ['$resource',
   function($resource) {
-    return $resource('api/transactions/:name', { name: '@name' }, {
+    return $resource('api/transactions', {pn: '@pageNumber', rpp: '@resultsPerPage', sb: '@sortBy', r: '@reverse', q: '@searchQuery'}, {
       update: {
         method: 'PUT'
       },
@@ -13,13 +13,8 @@ angular.module('mean.myby').factory('Transactions', ['$resource',
       },
       all: {
         method: 'GET',
-        isArray: true,
-        url: '/api/transactions?ppc=:perPage&pn=:pageNum&sb=:sortBy&r=:reverse?fq=:filterQuery',
-      },
-      count: {
-        method: 'GET',
         isArray: false,
-        url: '/api/transactions/count'
+        url: '/api/transactions'
       }
     });
   }

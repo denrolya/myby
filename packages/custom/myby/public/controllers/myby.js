@@ -10,48 +10,67 @@ angular.module('mean.myby').controller('MybyController', ['$scope', 'Global', 'T
       currentPage: 1,
       perPage: 10,
       perPageCountOptions: [5, 10, 15, 25],
-      totalItems: 0
+      totalItems: 1000
     };
 
     vm.sortingParams = {
       type: 'dateTo',
       reverse: true,
-      filterQuery: ''
+      searchQuery: ''
     };
 
     vm.transactions = [];
 
     vm.getTransactions = getTransactions;
     vm.setPage = setPage;
-    vm.pageChanged = pageChanged;
     vm.create = create;
-    vm.transactionsCount = transactionsCount;
     vm.orderBy = orderBy;
+    vm.search = search;
 
-    vm.transactionsCount();
-    vm.getTransactions();
+    $scope.$watch('vm.pagination.currentPage', vm.getTransactions);
+    $scope.$watch('vm.sortingParams.searchQuery', search)
 
     function orderBy(field) {
 
       if (vm.sortingParams.type != field) {
-        vm.pagination.currentPage = 1;
         vm.sortingParams.reverse = true;
         vm.sortingParams.type = field;
+        vm.pagination.currentPage = 1;
       } else {
         vm.sortingParams.reverse = !vm.sortingParams.reverse;
+        vm.getTransactions();
       }
-
-      vm.getTransactions();
     }
 
-    function transactionsCount() {
-      Transactions.count(function(response) {
-        vm.pagination.totalItems = response.totalCount;
+    function search(searchQuery) {
+      var requestParameters = {
+        rpp: vm.pagination.perPage,
+        pn: vm.pagination.currentPage,
+        sb: vm.sortingParams.type,
+        r: vm.sortingParams.reverse,
+        sq: vm.sortingParams.searchQuery
+      };
+
+      Transactions.all(requestParameters, function(response){
+        vm.transactions = response.transactions;
+        vm.pagination.totalItems = response.total;
       });
     }
 
-    function pageChanged() {
-      console.log('ama useless');
+    function getTransactions() {
+      var requestParameters = {
+        rpp: vm.pagination.perPage,
+        pn: vm.pagination.currentPage,
+        sb: vm.sortingParams.type,
+        r: vm.sortingParams.reverse
+      };
+
+      vm.transactions = Transactions.all(requestParameters,
+          function(response) {
+            vm.transactions = response.transactions;
+            vm.pagination.totalItems = response.total;
+          }
+      );
     }
 
     function create(valid) {
@@ -69,12 +88,5 @@ angular.module('mean.myby').controller('MybyController', ['$scope', 'Global', 'T
     function setPage(pageNo) {
       vm.currentPage = pageNo;
     };
-
-    function getTransactions() {
-      var params = {perPage: vm.pagination.perPage, pageNum: vm.pagination.currentPage, sortBy: vm.sortingParams.type, reverse: vm.sortingParams.reverse };
-      Transactions.all(params, function(transactions) {
-            vm.transactions = transactions;
-      });
-    }
   }
 ]);

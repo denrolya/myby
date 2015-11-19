@@ -5,7 +5,7 @@
         <div class="form-group">
             <div class="input-group">
                 <div class="input-group-addon"><i class="fa fa-search"></i></div>
-                <input type="text" class="form-control" placeholder="Filter by comment" ng-model="vm.sortingParams.filterQuery">
+                <input type="text" class="form-control" placeholder="Filter by comment" ng-model="vm.sortingParams.searchQuery">
             </div>
         </div>
 
@@ -62,7 +62,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="transaction in vm.transactions | filter:vm.sortingParams.filterQuery">
+                    <tr ng-repeat="transaction in vm.transactions">
                         <td>{{ transaction.accountNumber }}</td>
                         <td>{{ transaction.amount | number }} {{ transaction.currency == "HUF" ? "ft." : transaction.currency }}</td>
                         <td>{{ transaction.dateTo | date : 'yyyy-MM-dd' }}</td>
