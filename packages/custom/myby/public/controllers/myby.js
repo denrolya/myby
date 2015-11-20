@@ -29,6 +29,9 @@ angular.module('mean.myby').controller('MybyController', ['$scope', 'Global', 'T
 
     $scope.$watch('vm.pagination.currentPage', vm.getTransactions);
     $scope.$watch('vm.sortingParams.searchQuery', search)
+    $scope.$watch('vm.pagination.perPage', function(nv, ov) {
+      vm.pagination.currentPage = 1;
+    });
 
     function orderBy(field) {
 
