@@ -1,0 +1,21 @@
+<div class="" data-ng-controller="UploadController as vm">
+
+
+    <h1>Transactions upload</h1>
+
+    <form name="transactionForm" class="form-horizontal col-md-6" role="form" data-ng-submit="vm.create(transactionForm.$valid)" novalidate>
+        <div class="form-group">
+            <div ngf-drop ngf-select ng-model="vm.files" class="drop-box"
+                 ngf-drag-over-class="'dragover'" ngf-multiple="true" ngf-allow-dir="true"
+                 accept="text/csv" ngf-pattern=".csv"
+                 ng-class="{ 'has-error' : submitted && vm.file.$invalid }">
+                CSV
+            </div>
+        </div>
+    </form>
+
+    <div class="pull-right">
+        <pre>{{ vm.log }}</pre>
+    </div>
+
+</div>

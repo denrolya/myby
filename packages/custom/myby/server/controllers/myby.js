@@ -31,6 +31,29 @@ module.exports = function(Myby){
                     }
                 });
         },
+        uploadCSV: function(req, res) {
+            var file = req.files.file,
+                headers = ['accountNumber', 'type', 'amount', 'currency', 'dateFrom', 'dateTo', 'balance', 'issuersCode', 'issuersName', 'comment1', 'comment2', 'someDate', 'comment', 'delete'];
+
+            csv
+                .fromPath(file.path, { headers: headers, delimiter: ';', quote: '"'})
+                .on('data', function(data){
+                    delete data.delete;
+                    data.amount = Number(data.amount);
+                    data.dateFrom = parseDate(data.dateFrom);
+                    data.dateTo = parseDate(data.dateTo);
+
+                    var transaction = new Transaction(data);
+
+                    transaction.save(function(err) {
+                        console.log('----> ' + transaction.uid + '[' + err + ']');
+                    });
+
+                })
+                .on('end', function(){
+                    res.send('success');
+                });
+        },
         create: function(req, res) {
             var transaction = new Transaction(req.body);
             transaction.created = new Date();
@@ -53,7 +76,6 @@ module.exports = function(Myby){
         },
         parseCSV: function(req, res) {
             var file = __dirname + '/../august.csv';
-            var headers = ['accountNumber', 'type', 'amount', 'currency', 'dateFrom', 'dateTo', 'balance', 'issuersCode', 'issuersName', 'comment1', 'comment2', 'someDate', 'comment'];
 
             csv
                 .fromPath(file, { headers: headers, delimiter: ';', quote: '"'})
