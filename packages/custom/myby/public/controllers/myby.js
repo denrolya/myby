@@ -68,7 +68,7 @@ angular.module('mean.myby').controller('MybyController', ['$scope', 'Global', 'T
         r: vm.sortingParams.reverse
       };
 
-      vm.transactions = Transactions.all(requestParameters,
+      Transactions.all(requestParameters,
           function(response) {
             vm.transactions = response.transactions;
             vm.pagination.totalItems = response.total;

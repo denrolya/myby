@@ -26,6 +26,9 @@ Myby.register(function(app, auth, database) {
   
   Myby.aggregateAsset('css', 'myby.css');
   Myby.aggregateAsset('css', 'font-awesome.min.css');
+  Myby.aggregateAsset('css', 'common.css');
+
+  Myby.angularDependencies(['ngFileUpload']);
 
   /**
     //Uncomment to use. Requires meanio@0.3.7 or above

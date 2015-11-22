@@ -7,9 +7,9 @@ angular.module('mean.myby').config(['$stateProvider',
         url: '/transactions',
         templateUrl: 'myby/views/index.html'
       })
-      .state('create transaction', {
-        url: '/transactions/create',
-        templateUrl: 'myby/views/create.html'
+      .state('Upload transactions as CSV', {
+        url: '/transactions/upload',
+        templateUrl: 'myby/views/upload.html',
       });
   }
 ]);

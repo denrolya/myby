@@ -1,4 +1,7 @@
 'use strict';
+
+var multiparty = require('connect-multiparty'),
+    multipartyMiddleware = multiparty();
 /* jshint -W098 */
 
 // The Package is past automatically as first parameter
@@ -9,7 +12,7 @@ module.exports = function(Myby, app, auth) {
       .get(myby.all)
       .post(myby.create);
 
-  app.route('/api/transactions/count').get(myby.count);
+  app.post('/api/transactions/upload', multipartyMiddleware, myby.uploadCSV);
 
   app.get('/api/myby/example/auth', auth.requiresLogin, function(req, res, next) {
     res.send('Only authenticated users can access this');
