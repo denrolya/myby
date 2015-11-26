@@ -13,11 +13,12 @@ module.exports = function(Myby){
             var requestParameters = url.parse(req.url, true).query;
 
             var sortQuery = {}, filterQuery = {};
-            sortQuery[requestParameters.sb] = requestParameters.r === 'true' ? 1 : -1;
+            var sortBy = (requestParameters.sb) ? requestParameters.sb : 'dateTo';
+            sortQuery[sortBy] = (requestParameters.r) === 'false' ? -1 : 1;
 
             if (requestParameters.sq) {
                 var regex = new RegExp(requestParameters.sq, 'i');
-                filterQuery = { $or:[{'issuersCode': regex}, {'issuersName': regex}, {'comment': regex}, {'comment1': regex}, {'comment2': regex}]};
+                filterQuery = { $or:[{'issuer': regex}, {'comments': regex}]};
             }
 
             Transaction
@@ -33,22 +34,38 @@ module.exports = function(Myby){
         },
         uploadCSV: function(req, res) {
             var file = req.files.file,
-                headers = ['accountNumber', 'type', 'amount', 'currency', 'dateFrom', 'dateTo', 'balance', 'issuersCode', 'issuersName', 'comment1', 'comment2', 'someDate', 'comment', 'delete'];
+                headers = ['accountNumber', 'type', 'amount', 'currency', 'dateFrom', 'dateTo', 'balance', 'issuersCode', 'issuersName', 'comment1', 'comment2', 'someDate', 'comment3', 'delete'];
 
             csv
                 .fromPath(file.path, { headers: headers, delimiter: ';', quote: '"'})
                 .on('data', function(data){
-                    delete data.delete;
+                    var propertiesToDelete = ['delete', 'comment1', 'comment2', 'comment3', 'issuersCode', 'issuersName'];
+
+                    if (data.comment1.indexOf('PPASS') != -1) {
+                        var ppassIndex = data.comment1.indexOf('PPASS');
+                        data.isPayPass = true;
+                        data.comment1 = data.comment1.slice(0,ppassIndex).trim();
+                    }
+
+                    data.comments = [data.comment1, data.comment2, data.comment3].join(' ').replace(/\s{2,}/g, ' ').trim();
+                    data.issuer = [data.issuersCode, data.issuersName].join(' ').replace(/\s{2,}/g, '').trim();
                     data.amount = Number(data.amount);
                     data.dateFrom = parseDate(data.dateFrom);
                     data.dateTo = parseDate(data.dateTo);
+                    data.type = 'CC';
+
+
+                    for(var i = 0; i < propertiesToDelete.length; i++) {
+                        if (data.hasOwnProperty(propertiesToDelete[i])) {
+                            delete data[propertiesToDelete[i]];
+                        }
+                    }
 
                     var transaction = new Transaction(data);
 
                     transaction.save(function(err) {
                         console.log('----> ' + transaction.uid + '[' + err + ']');
                     });
-
                 })
                 .on('end', function(){
                     res.send('success');
@@ -73,30 +90,7 @@ module.exports = function(Myby){
             Transaction.count().exec(function (err, totalCount) {
                 res.json(totalCount);
             });
-        },
-        parseCSV: function(req, res) {
-            var file = __dirname + '/../august.csv';
-
-            csv
-                .fromPath(file, { headers: headers, delimiter: ';', quote: '"'})
-                .on('data', function(data){
-                    data.amount = Number(data.amount);
-                    data.dateFrom = parseDate(data.dateFrom);
-                    data.dateTo = parseDate(data.dateTo);
-
-                    var transaction = new Transaction(data);
-
-                    transaction.save(function(err) {
-                        console.log('----> ' + transaction.uid + '[' + err + ']');
-                    });
-                })
-                .on('end', function(){
-                    console.log('done');
-                });
         }
-        //aggregatedList:function(req,res) {
-        //    res.send(res.locals.aggregatedassets);
-        //}
     };
 };
 

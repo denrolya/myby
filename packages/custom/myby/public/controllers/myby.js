@@ -1,8 +1,8 @@
 'use strict';
 
 /* jshint -W098 */
-angular.module('mean.myby').controller('MybyController', ['$scope', 'Global', 'Transactions',
-  function($scope, Global, Transactions) {
+angular.module('mean.myby').controller('MybyController', ['$scope', 'Global', 'Transactions', 'TransactionService',
+  function($scope, Global, Transactions, TransactionService) {
     var vm = this;
     vm.global = Global;
 
@@ -10,7 +10,8 @@ angular.module('mean.myby').controller('MybyController', ['$scope', 'Global', 'T
       currentPage: 1,
       perPage: 10,
       perPageCountOptions: [5, 10, 15, 25],
-      totalItems: 1000
+      pagesCount: 0,
+      totalItems: 0
     };
 
     vm.sortingParams = {
@@ -38,40 +39,32 @@ angular.module('mean.myby').controller('MybyController', ['$scope', 'Global', 'T
       if (vm.sortingParams.type != field) {
         vm.sortingParams.reverse = true;
         vm.sortingParams.type = field;
-        vm.pagination.currentPage = 1;
+        if (vm.pagination.currentPage != 1) {
+          vm.pagination.currentPage = 1;
+        } else {
+          vm.getTransactions();
+        }
       } else {
         vm.sortingParams.reverse = !vm.sortingParams.reverse;
         vm.getTransactions();
       }
     }
 
-    function search(searchQuery) {
-      var requestParameters = {
-        rpp: vm.pagination.perPage,
-        pn: vm.pagination.currentPage,
-        sb: vm.sortingParams.type,
-        r: vm.sortingParams.reverse,
-        sq: vm.sortingParams.searchQuery
-      };
-
-      Transactions.all(requestParameters, function(response){
-        vm.transactions = response.transactions;
-        vm.pagination.totalItems = response.total;
-      });
+    function search(value) {
+      if (value) {
+        getTransactions();
+      }
     }
 
     function getTransactions() {
-      var requestParameters = {
-        rpp: vm.pagination.perPage,
-        pn: vm.pagination.currentPage,
-        sb: vm.sortingParams.type,
-        r: vm.sortingParams.reverse
-      };
+      var requestParameters = TransactionService.generateGetRequestParameters(vm.pagination, vm.sortingParams);
 
       Transactions.all(requestParameters,
           function(response) {
             vm.transactions = response.transactions;
             vm.pagination.totalItems = response.total;
+            vm.pagination.pagesCount = Math.ceil(response.total / vm.pagination.perPage);
+            console.log(vm.pagination);
           }
       );
     }

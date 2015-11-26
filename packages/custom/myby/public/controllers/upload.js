@@ -9,9 +9,7 @@ UploadController.$inject = ['$scope', 'Global', 'Transactions', 'Upload', '$time
 function UploadController($scope, Global, Transactions, Upload, $timeout) {
     var vm = this;
 
-    vm.files;
-    vm.errFile;
-    vm.log = '';
+    vm.files; vm.errFile; vm.log = '';
 
     vm.uploadFiles = uploadFiles;
 

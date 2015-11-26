@@ -4,22 +4,26 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 var TransactionSchema = new Schema({
-    accountNumber: {
+    accountNumber:  String,
+    type:           {
         type:       String,
         required:   true,
     },
-    type:           String,
-    amount:         Number,
+    isPayPass:      Boolean,
+    amount:         {
+        type:       Number,
+        required:   true,
+    },
     currency:       String,
     dateFrom:       Date,
     dateTo:         Date,
-    balance:        Number,
-    issuersCode:    String,
-    issuersName:    String,
-    comment1:       String,
-    comment2:       String,
+    remainder:      {
+        type:       Number,
+        required:   true,
+    },
+    issuer:         String,
     someDate:       String,
-    comment:        String
+    comments:       String
 });
 
 mongoose.model('Transaction', TransactionSchema);

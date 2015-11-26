@@ -1,15 +1,24 @@
 'use strict';
 
-angular.module('mean.myby').config(['$stateProvider',
-  function($stateProvider) {
-    $stateProvider
-        .state('myby example page', {
-        url: '/transactions',
-        templateUrl: 'myby/views/index.html'
-      })
-      .state('Upload transactions as CSV', {
-        url: '/transactions/upload',
-        templateUrl: 'myby/views/upload.html',
-      });
+angular.module('mean.myby').config(['$stateProvider', '$urlRouterProvider',
+  function($stateProvider,  $urlRouterProvider) {
+      // For unmatched routes:
+      $urlRouterProvider.otherwise('/');
+      $stateProvider
+          .state('transactions list', {
+              url: '/',
+              templateUrl: 'myby/views/index.html'
+          })
+          .state('Upload transactions as CSV', {
+              url: '/upload',
+              templateUrl: 'myby/views/upload.html',
+          });
   }
+]).config(['$locationProvider',
+    function($locationProvider) {
+        $locationProvider.html5Mode({
+            enabled:true,
+            requireBase:false
+        });
+    }
 ]);

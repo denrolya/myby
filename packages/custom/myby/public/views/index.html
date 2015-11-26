@@ -34,7 +34,6 @@
             <table class="table table-hover table-stripped table-bordered">
                 <thead>
                     <tr>
-                        <th>Account Number</th>
                         <th>
                             <a href="#" ng-click="vm.orderBy('amount')">
                                 Amount
@@ -57,36 +56,29 @@
                             </a>
                         </th>
                         <th>Issuer</th>
-                        <th>Comments</th>
+                        <th>Undefined info</th>
                         <th>Comments</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr ng-repeat="transaction in vm.transactions">
-                        <td>{{ transaction.accountNumber }}</td>
                         <td>{{ transaction.amount | number }} {{ transaction.currency == "HUF" ? "ft." : transaction.currency }}</td>
                         <td>{{ transaction.dateTo | date : 'yyyy-MM-dd' }}</td>
                         <td>{{ transaction.balance | number }} {{ transaction.currency == "HUF" ? "ft." : transaction.currency }}</td>
-                        <td>{{ transaction.issuersCode }} {{ transaction.issuersName }}</td>
-                        <td>{{ transaction.comment1 }} {{ transaction.comment2 }}</td>
-                        <td>{{ transaction.comment }}</td>
+                        <td>{{ transaction.issuer }}</td>
+                        <td>{{ transaction.someDate }}</td>
+                        <td>
+                            <div class="pull-left">
+                                {{ transaction.comments }}
+                            </div>
+                            <div class="pull-right">
+                                <span class="label label-ppass" ng-show="transaction.isPayPass">PayPass</span>
+                                <span class="label label-credit-card" ng-show="transaction.type == 'CC'">Credit Card</span>
+                            </div>
+                        </td>
                     </tr>
                 </tbody>
             </table>
-        </div>
-        
-        <div class="col-md-12">
-            <uib-pagination
-                    total-items="vm.pagination.totalItems"
-                    items-per-page="vm.pagination.perPage"
-                    ng-model="vm.pagination.currentPage"
-                    ng-change="vm.getTransactions()"
-                    max-size="4"
-                    class="pagination-sm"
-                    boundary-links="true"
-                    rotate="true"
-                    num-pages="numPages">
-            </uib-pagination>
         </div>
     </div>
 </div>
