@@ -14,7 +14,7 @@ angular.module('mean.myby').controller('MybyController', ['$scope', 'Global', 'T
       totalItems: 0
     };
 
-    vm.sortingParams = {
+    vm.sorting = {
       type: 'dateTo',
       reverse: true,
       searchQuery: ''
@@ -26,38 +26,30 @@ angular.module('mean.myby').controller('MybyController', ['$scope', 'Global', 'T
     vm.setPage = setPage;
     vm.create = create;
     vm.orderBy = orderBy;
-    vm.search = search;
 
     $scope.$watch('vm.pagination.currentPage', vm.getTransactions);
-    $scope.$watch('vm.sortingParams.searchQuery', search)
     $scope.$watch('vm.pagination.perPage', function(nv, ov) {
       vm.pagination.currentPage = 1;
     });
 
     function orderBy(field) {
 
-      if (vm.sortingParams.type != field) {
-        vm.sortingParams.reverse = true;
-        vm.sortingParams.type = field;
+      if (vm.sorting.type != field) {
+        vm.sorting.reverse = true;
+        vm.sorting.type = field;
         if (vm.pagination.currentPage != 1) {
           vm.pagination.currentPage = 1;
         } else {
           vm.getTransactions();
         }
       } else {
-        vm.sortingParams.reverse = !vm.sortingParams.reverse;
+        vm.sorting.reverse = !vm.sorting.reverse;
         vm.getTransactions();
       }
     }
-
-    function search(value) {
-      if (value) {
-        getTransactions();
-      }
-    }
-
+    
     function getTransactions() {
-      var requestParameters = TransactionService.generateGetRequestParameters(vm.pagination, vm.sortingParams);
+      var requestParameters = TransactionService.generateGetRequestParameters(vm.pagination, vm.sorting);
 
       Transactions.all(requestParameters,
           function(response) {
