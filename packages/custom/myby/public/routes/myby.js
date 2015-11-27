@@ -5,11 +5,11 @@ angular.module('mean.myby').config(['$stateProvider', '$urlRouterProvider',
       // For unmatched routes:
       $urlRouterProvider.otherwise('/');
       $stateProvider
-          .state('transactions list', {
+          .state('transactions-list', {
               url: '/',
               templateUrl: 'myby/views/index.html'
           })
-          .state('Upload transactions as CSV', {
+          .state('transactions-upload', {
               url: '/upload',
               templateUrl: 'myby/views/upload.html',
           });

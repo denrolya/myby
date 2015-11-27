@@ -64,7 +64,6 @@ angular.module('mean.myby').controller('MybyController', ['$scope', 'Global', 'T
             vm.transactions = response.transactions;
             vm.pagination.totalItems = response.total;
             vm.pagination.pagesCount = Math.ceil(response.total / vm.pagination.perPage);
-            console.log(vm.pagination);
           }
       );
     }

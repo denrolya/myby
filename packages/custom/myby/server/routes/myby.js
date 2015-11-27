@@ -10,7 +10,7 @@ module.exports = function(Myby, app, auth) {
 
   app.route('/api/transactions')
       .get(myby.all)
-      .post(myby.create);
+      .post(myby.registerTransaction);
 
   app.post('/api/transactions/upload', multipartyMiddleware, myby.uploadCSV);
 
@@ -20,12 +20,5 @@ module.exports = function(Myby, app, auth) {
 
   app.get('/api/myby/example/admin', auth.requiresAdmin, function(req, res, next) {
     res.send('Only users with Admin role can access this');
-  });
-
-  app.get('/api/myby/example/render', function(req, res, next) {
-    Myby.render('index', {package: 'myby'}, function(err, html) {
-      //Rendering a view from the Packages server/views
-      res.send(html);
-    });
   });
 };

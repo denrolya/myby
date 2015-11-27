@@ -20,7 +20,7 @@ Myby.register(function(app, auth, database) {
   Myby.menus.add({
     title: 'myby example page',
     link: 'myby example page',
-    roles: ['authenticated'],
+    roles: [],
     menu: 'main'
   });
   
