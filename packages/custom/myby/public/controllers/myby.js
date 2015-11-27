@@ -26,11 +26,17 @@ angular.module('mean.myby').controller('MybyController', ['$scope', 'Global', 'T
     vm.setPage = setPage;
     vm.create = create;
     vm.orderBy = orderBy;
+    vm.clearSearchQuery = clearSearchQuery;
 
     $scope.$watch('vm.pagination.currentPage', vm.getTransactions);
     $scope.$watch('vm.pagination.perPage', function(nv, ov) {
       vm.pagination.currentPage = 1;
     });
+
+    function clearSearchQuery() {
+      vm.sorting.searchQuery = '';
+      vm.getTransactions();
+    }
 
     function orderBy(field) {
 

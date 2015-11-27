@@ -5,8 +5,8 @@
         <div class="form-group">
             <div class="input-group">
                 <div class="input-group-addon"><i class="fa fa-search"></i></div>
-                <input type="text" class="form-control" placeholder="Filter by comment"  ng-model="vm.sorting.searchQuery" ng-change="vm.getTransactions()" ng-model-options="{debounce: 500}">
-                <div class="input-group-addon"><i class="fa fa-times"></i></div>
+                <input type="text" class="form-control" placeholder="Filter by comment" ng-model="vm.sorting.searchQuery" ng-change="vm.getTransactions()" ng-model-options="{debounce: 500}">
+                <div class="input-group-addon" ng-show="vm.sorting.searchQuery != ''" ng-click="vm.clearSearchQuery()"><i class="fa fa-times"></i></div>
             </div>
         </div>
 
