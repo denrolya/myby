@@ -6,7 +6,7 @@ angular
 
 function TransactionService() {
     var service = {
-        generateGetRequestParameters: generateGetRequestParameters,
+        generateGetRequestParameters: generateGetRequestParameters
     };
 
     return service;

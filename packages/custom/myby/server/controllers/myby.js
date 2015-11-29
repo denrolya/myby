@@ -40,7 +40,7 @@ module.exports = function(Myby){
 
     function uploadCSV(req, res) {
         var file = req.files.file,
-            headers = ['accountNumber', 'type', 'amount', 'currency', 'dateFrom', 'dateTo', 'balance', 'issuersCode', 'issuersName', 'comment1', 'comment2', 'someDate', 'comment3', 'delete'];
+            headers = ['accountNumber', 'type', 'amount', 'currency', 'dateFrom', 'dateTo', 'remainder', 'issuersCode', 'issuersName', 'comment1', 'comment2', 'someDate', 'comment3', 'delete'];
 
         csv
             .fromPath(file.path, { headers: headers, delimiter: ';', quote: '"'})
@@ -59,7 +59,6 @@ module.exports = function(Myby){
                 data.dateFrom = parseDate(data.dateFrom);
                 data.dateTo = parseDate(data.dateTo);
                 data.type = 'CC';
-
 
                 for(var i = 0; i < propertiesToDelete.length; i++) {
                     if (data.hasOwnProperty(propertiesToDelete[i])) {
@@ -80,8 +79,13 @@ module.exports = function(Myby){
 
     function createTransaction(req, res) {
         var transaction = new Transaction(req.body);
-        transaction.created = new Date();
-        transaction.updated = new Date();
+
+        transaction.type = 'C';
+        transaction.accountNumber = null;
+        transaction.isPayPass = false;
+        transaction.remainder = null;
+        transaction.dateFrom = req.body.date;
+        transaction.dateTo = req.body.date;
 
         transaction.save(function(err) {
             if (err) {

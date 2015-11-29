@@ -14,8 +14,13 @@ function Transactions($resource) {
       isArray: false,
       url: '/api/transactions',
       params: {
-        sq: '@searchQuery'
+        sq: '@searchQuery',
+        f: '@filter'
       }
+    },
+    register: {
+      method: 'POST',
+      url: '/api/transactions'
     }
   });
 }

@@ -17,10 +17,7 @@ var TransactionSchema = new Schema({
     currency:       String,
     dateFrom:       Date,
     dateTo:         Date,
-    remainder:      {
-        type:       Number,
-        required:   true,
-    },
+    remainder:      Number,
     issuer:         String,
     someDate:       String,
     comments:       String

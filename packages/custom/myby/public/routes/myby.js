@@ -12,6 +12,10 @@ angular.module('mean.myby').config(['$stateProvider', '$urlRouterProvider',
           .state('transactions-upload', {
               url: '/upload',
               templateUrl: 'myby/views/upload.html',
+          })
+          .state('transaction-register', {
+              url: '/register',
+              templateUrl: 'myby/views/register.html'
           });
   }
 ]).config(['$locationProvider',

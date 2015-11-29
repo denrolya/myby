@@ -1,3 +1,4 @@
+<script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.11.0/ui-bootstrap-tpls.min.js"></script>
 <div ng-controller="MybyController as vm">
     <h1>My transactions</h1>
 
@@ -50,10 +51,10 @@
                             </a>
                         </th>
                         <th>
-                            <a href="#" ng-click="vm.orderBy('balance')">
+                            <a href="#" ng-click="vm.orderBy('remainder')">
                                 Remainder
-                                <span ng-show="vm.sorting.type == 'balance' && !vm.sorting.reverse" class="fa fa-caret-down"></span>
-                                <span ng-show="vm.sorting.type == 'balance' && vm.sorting.reverse" class="fa fa-caret-up"></span>
+                                <span ng-show="vm.sorting.type == 'remainder' && !vm.sorting.reverse" class="fa fa-caret-down"></span>
+                                <span ng-show="vm.sorting.type == 'remainder' && vm.sorting.reverse" class="fa fa-caret-up"></span>
                             </a>
                         </th>
                         <th>Issuer</th>
@@ -65,7 +66,9 @@
                     <tr ng-repeat="transaction in vm.transactions">
                         <td>{{ transaction.amount | number }} {{ transaction.currency == "HUF" ? "ft." : transaction.currency }}</td>
                         <td>{{ transaction.dateTo | date : 'yyyy-MM-dd' }}</td>
-                        <td>{{ transaction.balance | number }} {{ transaction.currency == "HUF" ? "ft." : transaction.currency }}</td>
+                        <td>
+                            {{ transaction.remainder | number }} {{ transaction.currency == "HUF" ? "ft." : transaction.currency }}
+                        </td>
                         <td>{{ transaction.issuer }}</td>
                         <td>{{ transaction.someDate }}</td>
                         <td>
@@ -75,11 +78,29 @@
                             <div class="pull-right">
                                 <span class="label label-ppass" ng-show="transaction.isPayPass">PayPass</span>
                                 <span class="label label-credit-card" ng-show="transaction.type == 'CC'">Credit Card</span>
+                                <span class="label label-cash" ng-show="transaction.type == 'C'">Cash</span>
                             </div>
                         </td>
                     </tr>
                 </tbody>
             </table>
+        </div>
+
+        <div>
+            <button class="btn btn-primary"
+                    ng-click="vm.toggleNewTransactionRegistration()"
+                    ng-hide="vm.newTransaction.isShown">
+                register new transaction
+            </button>
+            <div ng-show="vm.newTransaction.isShown">
+                <button class="btn btn-danger" ng-click="vm.toggleNewTransactionRegistration()">
+                    <i class="glyphicon glyphicon-remove"></i>
+                </button>
+                Transaction: -amount- -currency- by -issuer- on -date-. -comments-
+                <button type="submit" class="btn btn-success" >
+                    <i class="glyphicon glyphicon-ok"></i>
+                </button>
+            </div>
         </div>
     </div>
 </div>

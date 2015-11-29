@@ -3,7 +3,7 @@
   margin-top: 70px;
 }
 
-.label.label-ppass, .label.label-credit-card {
+.label.label-ppass, .label.label-credit-card, .label.label-cash {
   background-size: contain;
   background-repeat: no-repeat;
   width: 45px;
@@ -17,4 +17,8 @@
 
 .label.label-credit-card {
   background-image: url('/myby/assets/img/mastercard.png');
+}
+
+.label.label-cash {
+  background-image: url('/myby/assets/img/cash.png');
 }
