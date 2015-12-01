@@ -1,4 +1,3 @@
-<script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.11.0/ui-bootstrap-tpls.min.js"></script>
 <div ng-controller="MybyController as vm">
     <h1>My transactions</h1>
 
@@ -85,22 +84,7 @@
                 </tbody>
             </table>
         </div>
-
-        <div>
-            <button class="btn btn-primary"
-                    ng-click="vm.toggleNewTransactionRegistration()"
-                    ng-hide="vm.newTransaction.isShown">
-                register new transaction
-            </button>
-            <div ng-show="vm.newTransaction.isShown">
-                <button class="btn btn-danger" ng-click="vm.toggleNewTransactionRegistration()">
-                    <i class="glyphicon glyphicon-remove"></i>
-                </button>
-                Transaction: -amount- -currency- by -issuer- on -date-. -comments-
-                <button type="submit" class="btn btn-success" >
-                    <i class="glyphicon glyphicon-ok"></i>
-                </button>
-            </div>
-        </div>
     </div>
+
+    <div transaction-form></div>
 </div>

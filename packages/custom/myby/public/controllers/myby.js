@@ -1,17 +1,10 @@
 'use strict';
 
-angular.module('mean.myby').run(function(editableOptions) {
-  editableOptions.theme = 'bs3';
-});
-
 /* jshint -W098 */
-angular.module('mean.myby').controller('MybyController', ['$scope', 'Global', 'Transactions', 'TransactionService', '$filter', '$timeout',
-  function($scope, Global, Transactions, TransactionService, $filter, $timeout) {
+angular.module('mean.myby').controller('MybyController', ['$scope', 'Global', 'Transactions', 'TransactionService', '$filter',
+  function($scope, Global, Transactions, TransactionService, $filter) {
     var vm = this;
     vm.global = Global;
-    $scope.user = {
-      name: 'asdfasfdasd'
-    };
 
     vm.pagination = {
       currentPage: 1,
@@ -27,16 +20,6 @@ angular.module('mean.myby').controller('MybyController', ['$scope', 'Global', 'T
       searchQuery: ''
     };
 
-    vm.newTransaction = {
-      isShown: false,
-      date: new Date(),
-      currencyOptions: [
-        {symbol: 'Ft.', code: 'HUF'},
-        {symbol: '$', code: 'USD'},
-        {symbol: '€', code: 'EUR'}
-      ]
-    };
-
     vm.transactions = [];
 
     vm.getTransactions = getTransactions;
@@ -44,25 +27,11 @@ angular.module('mean.myby').controller('MybyController', ['$scope', 'Global', 'T
     vm.create = create;
     vm.orderBy = orderBy;
     vm.clearSearchQuery = clearSearchQuery;
-    vm.showSelectedCurrencyCode = showSelectedCurrencyCode;
-    vm.toggleNewTransactionRegistration = toggleNewTransactionRegistration;
 
     $scope.$watch('vm.pagination.currentPage', vm.getTransactions);
     $scope.$watch('vm.pagination.perPage', function(nv, ov) {
       vm.pagination.currentPage = 1;
     });
-
-    function toggleNewTransactionRegistration() {
-      vm.newTransaction.isShown = !vm.newTransaction.isShown;
-    }
-
-    function showSelectedCurrencyCode() {
-      var selectedCurrency = vm.newTransaction.currencyOptions.filter(function (currency) {
-        return currency.code == vm.newTransaction.currency;
-      });
-
-      return  (selectedCurrency[0]) ? selectedCurrency[0].symbol : 'currency';
-    };
 
     function clearSearchQuery() {
       vm.sorting.searchQuery = '';

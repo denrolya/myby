@@ -22,3 +22,8 @@
 .label.label-cash {
   background-image: url('/myby/assets/img/cash.png');
 }
+
+.form-transaction .form-control {
+  display: inline-block;
+  width: auto;
+}

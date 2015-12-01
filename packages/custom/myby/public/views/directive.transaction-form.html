@@ -1,0 +1,38 @@
+<div class="row">
+    <div class="col-md-12">
+        <button class="btn btn-primary"
+                ng-click="dvm.toggleNewTransactionRegistration()"
+                ng-hide="dvm.newTransaction.isShown">
+            register new transaction
+        </button>
+        <form class="form form-horizontal form-transaction" novalidate ng-show="dvm.newTransaction.isShown">
+            <button class="btn btn-danger" ng-click="dvm.toggleNewTransactionRegistration()">
+                <i class="glyphicon glyphicon-remove"></i>
+            </button>
+
+            <input class="form-control" required
+                   type="number"
+                   ng-model="dvm.newTransaction.amount"
+                   placeholder="Amount"
+                   ng-required="pizdec"/>
+
+            <select class="form-control"
+                    ng-model="dvm.newTransaction.currency"
+                    ng-options="currency.code as currency.symbol for currency in dvm.newTransaction.currencyOptions">
+            </select>
+
+                <span ng-show="(dvm.newTransaction.amount != '' || dvm.newTransaction.amount != 'amount') && dvm.newTransaction.amount < 0" >
+                    by
+                    <input ng-if="dvm.newTransaction.amount < 0" class="form-control" type="text" ng-model="dvm.newTransaction.issuer"/>
+                </span>
+
+            on <input class="form-control" type="date" ng-model="dvm.newTransaction.date" required/>
+            -
+            <textarea class="form-control" ng-model="dvm.newTransaction.comments"></textarea>
+
+            <button type="submit" class="btn btn-success" ng-click="dvm.registerTransaction()">
+                <i class="glyphicon glyphicon-ok"></i>
+            </button>
+        </form>
+    </div>
+</div>
