@@ -1,10 +1,13 @@
 'use strict';
 
+
 /* jshint -W098 */
-angular.module('mean.myby').controller('MybyController', ['$scope', 'Global', 'Transactions', 'TransactionService', '$filter',
-  function($scope, Global, Transactions, TransactionService, $filter) {
+angular.module('mean.myby').controller('MybyController', ['$scope', 'Global', 'Transactions', 'TransactionService', '$filter', '$aside',
+  function($scope, Global, Transactions, TransactionService, $filter, $aside) {
     var vm = this;
     vm.global = Global;
+
+    vm.sidebar;
 
     vm.pagination = {
       currentPage: 1,
@@ -16,7 +19,7 @@ angular.module('mean.myby').controller('MybyController', ['$scope', 'Global', 'T
 
     vm.sorting = {
       type: 'dateTo',
-      reverse: true,
+      reverse: false,
       searchQuery: ''
     };
 
@@ -24,14 +27,48 @@ angular.module('mean.myby').controller('MybyController', ['$scope', 'Global', 'T
 
     vm.getTransactions = getTransactions;
     vm.setPage = setPage;
-    vm.create = create;
     vm.orderBy = orderBy;
     vm.clearSearchQuery = clearSearchQuery;
+    vm.toggleSidebar = toggleSidebar;
 
     $scope.$watch('vm.pagination.currentPage', vm.getTransactions);
     $scope.$watch('vm.pagination.perPage', function(nv, ov) {
       vm.pagination.currentPage = 1;
     });
+
+    $scope.$on('refreshTransactions', function(event, args) {
+      vm.getTransactions();
+    });
+
+    function toggleSidebar() {
+      vm.sidebar = bindSidebar($aside.open(defineSidebar()));
+    }
+
+    function defineSidebar() {
+      return {
+        templateUrl: 'myby/views/register.html',
+        controller: 'RegisterController',
+        controllerAs: 'avm',
+        placement: 'left',
+        size: 'sm',
+        resolve: {
+          resolved: function($rootScope, $q) {
+            return ($rootScope.flag) ? $q.when({stuff:'asynchronous'}) : {stuff:'synchronous'}
+          }
+        }
+      };
+    }
+
+    function bindSidebar(sidebar) {
+      sidebar.opened.then(function() {
+        console.log('client: opened');
+      });
+      sidebar.result.then(function(result) {
+        console.log('client: resolved: ' + result);
+      }, function(reason) {
+        console.log('client: rejected: ' + reason);
+      });
+    }
 
     function clearSearchQuery() {
       vm.sorting.searchQuery = '';
@@ -65,18 +102,6 @@ angular.module('mean.myby').controller('MybyController', ['$scope', 'Global', 'T
           }
       );
     }
-
-    function create(valid) {
-      if (!valid) return;
-
-      var transaction = new Transactions(vm.transaction);
-      transaction.$save(function(response) {
-        vm.transactions.push(transaction.name);
-        vm.transaction = {};
-      }, function(err) {
-        alert('Cannot register transaction');
-      });
-    };
 
     function setPage(pageNo) {
       vm.currentPage = pageNo;

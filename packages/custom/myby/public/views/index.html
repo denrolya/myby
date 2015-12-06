@@ -17,18 +17,24 @@
                 ng-change="vm.getTransactions()">
         </select>
 
-        <div class="col-md-12">
-            <uib-pagination
-                    total-items="vm.pagination.totalItems"
-                    items-per-page="vm.pagination.perPage"
-                    ng-model="vm.pagination.currentPage"
-                    ng-change="vm.getTransactions()"
-                    max-size="4"
-                    class="pagination-sm"
-                    boundary-links="true"
-                    rotate="true"
-                    num-pages="numPages">
-            </uib-pagination>
+        <div class="row">
+            <div class="col-md-6">
+                <uib-pagination
+                        total-items="vm.pagination.totalItems"
+                        items-per-page="vm.pagination.perPage"
+                        ng-model="vm.pagination.currentPage"
+                        ng-change="vm.getTransactions()"
+                        max-size="4"
+                        class="pagination-sm"
+                        boundary-links="true"
+                        rotate="true"
+                        num-pages="numPages">
+                </uib-pagination>
+            </div>
+
+            <div class="col-md-6 text-right" style="margin: 20px 0px;">
+                <button class="btn btn-primary btn-sm" ng-click="vm.toggleSidebar()">New transaction</button>
+            </div>
         </div>
 
         <div class="col-md-12">
@@ -85,6 +91,4 @@
             </table>
         </div>
     </div>
-
-    <div transaction-form></div>
 </div>

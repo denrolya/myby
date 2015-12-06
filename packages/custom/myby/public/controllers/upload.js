@@ -40,7 +40,6 @@ function UploadController($scope, Global, Transactions, Upload, $timeout) {
                     });
                 }
             }
-        }
-        ;
+        };
     }
 }

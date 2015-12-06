@@ -3,7 +3,8 @@
     "css": {
       "bower_components/build/css/dist.min.css": [
         "bower_components/angular/angular-csp.css",
-        "bower_components/angular-ui-select/dist/select.min.css"
+        "bower_components/angular-ui-select/dist/select.min.css",
+        "bower_components/angular-aside/dist/css/angular-aside.css"
       ]
     },
     "js": {
@@ -19,7 +20,11 @@
         "bower_components/angular-bootstrap/ui-bootstrap-tpls.js",
         "bower_components/angular-ui-select/dist/select.min.js",
         "bower_components/web-bootstrap/index.js",
-        "bower_components/ng-file-upload/ng-file-upload.min.js"
+        "bower_components/ng-file-upload/ng-file-upload.min.js",
+        "bower_components/api-check/dist/api-check.js",
+        "bower_components/angular-formly/dist/formly.min.js",
+        "bower_components/angular-formly-templates-bootstrap/dist/angular-formly-templates-bootstrap.min.js",
+        "bower_components/angular-aside/dist/js/angular-aside.js"
       ]
     }
   }

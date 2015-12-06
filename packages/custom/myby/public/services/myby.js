@@ -7,10 +7,15 @@ angular
 function TransactionService() {
     var service = {
         generateGetRequestParameters: generateGetRequestParameters,
-        validateTransaction: validateTransaction
+        validateTransaction: validateTransaction,
+        isTransactionIssuerValid: isTransactionIssuerValid
     };
 
     return service;
+
+    function isTransactionIssuerValid(transaction) {
+        return (transaction.amount <= 0 && (transaction.issuer == "" || transaction.issuer == undefined)) ? false : true;
+    }
 
     function generateGetRequestParameters(pagination, sorting) {
         var requestParameters = [];
