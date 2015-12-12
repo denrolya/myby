@@ -45,7 +45,7 @@ module.exports = function(Myby){
         csv
             .fromPath(file.path, { headers: headers, delimiter: ';', quote: '"'})
             .on('data', function(data){
-                var propertiesToDelete = ['delete', 'comment1', 'comment2', 'comment3', 'issuersCode', 'issuersName'];
+                var propertiesToDelete = ['delete', 'comment1', 'comment2', 'comment3', 'issuersCode', 'issuersName', 'someDate'];
 
                 if (data.comment1.indexOf('PPASS') != -1) {
                     var ppassIndex = data.comment1.indexOf('PPASS');
@@ -53,11 +53,14 @@ module.exports = function(Myby){
                     data.comment1 = data.comment1.slice(0,ppassIndex).trim();
                 }
 
+                var possibleTransactionDate = data.someDate.slice(0,10).trim();
+
                 data.comments = [data.comment1, data.comment2, data.comment3].join(' ').replace(/\s{2,}/g, ' ').trim();
                 data.issuer = [data.issuersCode, data.issuersName].join(' ').replace(/\s{2,}/g, '').trim();
                 data.amount = Number(data.amount);
                 data.dateFrom = parseDate(data.dateFrom);
                 data.dateTo = parseDate(data.dateTo);
+                data.date = (possibleTransactionDate != '') ? new Date(possibleTransactionDate) : data.dateFrom;
                 data.type = 'CC';
 
                 for(var i = 0; i < propertiesToDelete.length; i++) {
@@ -69,7 +72,7 @@ module.exports = function(Myby){
                 var transaction = new Transaction(data);
 
                 transaction.save(function(err) {
-                    console.log('----> ' + transaction.uid + '[' + err + ']');
+                    console.log('----> ' + transaction.id + '[' + err + ']');
                 });
             })
             .on('end', function(){

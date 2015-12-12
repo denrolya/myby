@@ -9,6 +9,10 @@ var TransactionSchema = new Schema({
         type:       String,
         required:   true,
     },
+    date:           {
+        type:       Date,
+        required:   true
+    },
     isPayPass:      Boolean,
     amount:         {
         type:       Number,
@@ -19,7 +23,6 @@ var TransactionSchema = new Schema({
     dateTo:         Date,
     remainder:      Number,
     issuer:         String,
-    someDate:       String,
     comments:       String
 });
 

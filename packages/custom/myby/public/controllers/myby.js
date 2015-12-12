@@ -18,7 +18,7 @@ angular.module('mean.myby').controller('MybyController', ['$scope', 'Global', 'T
     };
 
     vm.sorting = {
-      type: 'dateTo',
+      type: 'date',
       reverse: false,
       searchQuery: ''
     };
