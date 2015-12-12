@@ -2,13 +2,13 @@
 
 
 /* jshint -W098 */
-angular.module('mean.myby').controller('MybyController', ['$scope', 'Global', 'Transactions', 'TransactionService', '$filter', '$aside',
-  function($scope, Global, Transactions, TransactionService, $filter, $aside) {
+angular.module('mean.myby').controller('MybyController', ['$scope', 'Global', 'Transactions', 'TransactionService', '$filter', '$aside', 'Upload', '$timeout',
+  function($scope, Global, Transactions, TransactionService, $filter, $aside, Upload, $timeout) {
     var vm = this;
     vm.global = Global;
 
+    vm.files; vm.errFile; vm.log = '';
     vm.sidebar;
-
     vm.pagination = {
       currentPage: 1,
       perPage: 10,
@@ -16,7 +16,6 @@ angular.module('mean.myby').controller('MybyController', ['$scope', 'Global', 'T
       pagesCount: 0,
       totalItems: 0
     };
-
     vm.sorting = {
       type: 'date',
       reverse: false,
@@ -30,15 +29,46 @@ angular.module('mean.myby').controller('MybyController', ['$scope', 'Global', 'T
     vm.orderBy = orderBy;
     vm.clearSearchQuery = clearSearchQuery;
     vm.toggleSidebar = toggleSidebar;
+    vm.uploadFiles = uploadFiles;
 
     $scope.$watch('vm.pagination.currentPage', vm.getTransactions);
     $scope.$watch('vm.pagination.perPage', function(nv, ov) {
       vm.pagination.currentPage = 1;
     });
+    $scope.$watch('vm.files', function (nv, ov) {
+      vm.uploadFiles(vm.files);
+    });
 
     $scope.$on('refreshTransactions', function(event, args) {
       vm.getTransactions();
     });
+
+    function uploadFiles(files) {
+      if (files && files.length) {
+        for (var i = 0; i < files.length; i++) {
+          var file = files[i];
+          if (!file.$error) {
+            file.upload = Upload.upload({
+              url: 'api/transactions/upload',
+              method: 'POST',
+              file: file,
+              data: {
+                file: file
+              },
+            }).progress(function (evt) {
+              var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+              vm.log = 'progress: ' + progressPercentage + '% ' +
+                  evt.config.data.file.name + '\n' + vm.log;
+            }).success(function (data, status, headers, config) {
+              $timeout(function () {
+                vm.log = 'file: ' + config.data.file.name + ', Response: ' + JSON.stringify(data) + '\n' + vm.log;
+              });
+            });
+          }
+        }
+        vm.getTransactions();
+      };
+    }
 
     function toggleSidebar() {
       vm.sidebar = bindSidebar($aside.open(defineSidebar()));

@@ -9,32 +9,40 @@
                 <div class="input-group-addon" ng-show="vm.sorting.searchQuery != ''" ng-click="vm.clearSearchQuery()"><i class="fa fa-times"></i></div>
             </div>
         </div>
+    </div>
 
+    <div class="row">
         <select
                 class="form-control"
                 ng-model="vm.pagination.perPage"
                 ng-options="count as count for count in vm.pagination.perPageCountOptions"
                 ng-change="vm.getTransactions()">
         </select>
+    </div>
 
-        <div class="row">
-            <div class="col-md-6"></div>
-
-            <div class="col-md-6">
-                <uib-pagination
-                        total-items="vm.pagination.totalItems"
-                        items-per-page="vm.pagination.perPage"
-                        ng-model="vm.pagination.currentPage"
-                        ng-change="vm.getTransactions()"
-                        max-size="4"
-                        class="pagination-sm"
-                        boundary-links="true"
-                        rotate="true"
-                        num-pages="numPages">
-                </uib-pagination>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="text-right" style="margin: 20px 0px;">
+                <button class="btn btn-primary btn-sm" ng-click="vm.toggleSidebar()">New transaction</button>
             </div>
         </div>
 
+        <div class="col-md-6">
+            <uib-pagination
+                    total-items="vm.pagination.totalItems"
+                    items-per-page="vm.pagination.perPage"
+                    ng-model="vm.pagination.currentPage"
+                    ng-change="vm.getTransactions()"
+                    max-size="4"
+                    class="pagination-sm"
+                    boundary-links="true"
+                    rotate="true"
+                    num-pages="numPages">
+            </uib-pagination>
+        </div>
+    </div>
+
+    <div class="row">
         <div class="col-md-12">
             <table class="table table-hover table-stripped table-bordered">
                 <thead>
@@ -88,9 +96,25 @@
                 </tbody>
             </table>
         </div>
-        <div class="text-center" style="margin: 20px 0px;">
-            <button class="btn btn-primary btn-sm" ng-click="vm.toggleSidebar()">New transaction</button>
-            <button class="btn btn-default btn sm" ui-sref="transactions-upload">Upload CSV</button>
+    </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <form name="transactionForm" class="form form-horizontal" role="form" data-ng-submit="vm.create(transactionForm.$valid)" novalidate>
+                    <div class="form-group">
+                        <div ngf-drop ngf-select ng-model="vm.files" class="drop-box"
+                             ngf-drag-over-class="'dragover'" ngf-multiple="true" ngf-allow-dir="true"
+                             accept="text/csv" ngf-pattern=".csv"
+                             ng-class="{ 'has-error' : submitted && vm.file.$invalid }">
+                            CSV
+                        </div>
+                    </div>
+                </form>
+
+                <div class="pull-right" ng-if="vm.log">
+                    <pre>{{ vm.log }}</pre>
+                </div>
+            </div>
         </div>
     </div>
 </div>
