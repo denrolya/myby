@@ -10,6 +10,7 @@
     "type": "git",
     "url": "https://github.com/linnovate/mean.git"
   },
+  "license": "MIT",
   "scripts": {
     "start": "node server",
     "mocha": "node tools/test/run-mocha.js",
@@ -30,10 +31,11 @@
     "cookie-parser": "latest",
     "errorhandler": "latest",
     "express": "latest",
+    "fast-csv": "^0.6.0",
     "forever": "latest",
     "gridfs-stream": "latest",
     "jsonwebtoken": "latest",
-    "lodash": "latest",
+    "lodash": "https://registry.npmjs.org/lodash/-/lodash-3.10.1.tgz",
     "meanio": "latest",
     "mongoose": "latest",
     "mongoose-pagination": "^1.0.0",

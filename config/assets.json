@@ -4,7 +4,8 @@
       "bower_components/build/css/dist.min.css": [
         "bower_components/angular/angular-csp.css",
         "bower_components/angular-ui-select/dist/select.min.css",
-        "bower_components/angular-aside/dist/css/angular-aside.css"
+        "bower_components/angular-aside/dist/css/angular-aside.css",
+        "bower_components/font-awesome/css/font-awesome.min.css"
       ]
     },
     "js": {

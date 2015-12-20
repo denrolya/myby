@@ -1,0 +1,24 @@
+.container {
+  width: 100% !important;
+  margin-top: 70px;
+}
+
+.label.label-ppass, .label.label-credit-card, .label.label-cash {
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 45px;
+  text-indent: -9999px;
+  display:inline-block;
+}
+
+.label.label-ppass {
+  background-image: url('/transactions/assets/img/paypass.png');
+}
+
+.label.label-credit-card {
+  background-image: url('/transactions/assets/img/mastercard.png');
+}
+
+.label.label-cash {
+  background-image: url('/transactions/assets/img/cash.png');
+}

@@ -3,7 +3,7 @@
 
 # TEAM
 
-    drolya -- CEO -- #drolyaCEO
+    <name> -- <role> -- <twitter>
 
 # THANKS
 

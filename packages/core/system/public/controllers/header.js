@@ -17,7 +17,11 @@ angular.module('mean.system').controller('HeaderController', ['$scope', '$rootSc
 
     // Query menus added by modules. Only returns menus that user is allowed to see.
     function queryMenu(name, defaultMenu) {
-      Menus.query({ name: name, defaultMenu: defaultMenu}, function(menu) {
+
+      Menus.query({
+        name: name,
+        defaultMenu: defaultMenu
+      }, function(menu) {
         vm.menus[name] = menu;
       });
     }
@@ -25,6 +29,7 @@ angular.module('mean.system').controller('HeaderController', ['$scope', '$rootSc
     // Query server for menus and check permissions
     queryMenu('main', defaultMainMenu);
     queryMenu('account', []);
+
 
     $scope.isCollapsed = false;
 
@@ -49,7 +54,7 @@ angular.module('mean.system').controller('HeaderController', ['$scope', '$rootSc
         isAdmin: false
       };
       queryMenu('main', defaultMainMenu);
-      $state.go('home');
+      $state.go('auth.login');
     });
 
   }
