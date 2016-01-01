@@ -21,9 +21,20 @@ module.exports = function(Transactions){
         var sortBy = (requestParameters.sb) ? requestParameters.sb : 'dateTo';
         sortQuery[sortBy] = (requestParameters.r) === 'false' ? -1 : 1;
 
-        if (requestParameters.sq) {
-            var regex = new RegExp(requestParameters.sq, 'i');
-            filterQuery = { $or:[{'issuer': regex}, {'comments': regex}]};
+        if (requestParameters.f) {
+            requestParameters.f = JSON.parse(requestParameters.f);
+
+            if (requestParameters.f.searchQuery) {
+                var regex = new RegExp(requestParameters.f.searchQuery, 'i');
+                filterQuery['$or'] = [{'issuer': regex}, {'comments': regex}];
+            }
+
+            if (requestParameters.f.date) {
+                var startDate = (new Date(requestParameters.f.date)).setHours(0,0,0,0),
+                    endDate = (new Date(requestParameters.f.date)).setHours(23,59,59,999);
+
+                filterQuery['date'] = {$gte: startDate, $lt: endDate};
+            }
         }
 
         Transaction
@@ -107,4 +118,16 @@ function parseDate(date) {
 
     return new Date(date.join(' '));
 
+}
+
+function addDays(startDate,numberOfDays)
+{
+    var returnDate = new Date(
+        startDate.getFullYear(),
+        startDate.getMonth(),
+        startDate.getDate()+numberOfDays,
+        startDate.getHours(),
+        startDate.getMinutes(),
+        startDate.getSeconds());
+    return returnDate;
 }

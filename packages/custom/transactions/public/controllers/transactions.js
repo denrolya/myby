@@ -16,20 +16,24 @@ angular.module('mean.transactions').controller('TransactionsController', ['$scop
       pagesCount: 0,
       totalItems: 0
     };
+
     vm.sorting = {
       type: 'date',
       reverse: false,
-      searchQuery: ''
     };
+
+    vm.filters = {};
 
     vm.transactions = [];
 
     vm.getTransactions = getTransactions;
+    vm.getTransactionsByDate = getTransactionsByDate;
     vm.setPage = setPage;
     vm.orderBy = orderBy;
     vm.clearSearchQuery = clearSearchQuery;
     vm.toggleSidebar = toggleSidebar;
     vm.uploadFiles = uploadFiles;
+    vm.resetFilters = resetFilters;
 
     $scope.$watch('vm.pagination.currentPage', vm.getTransactions);
     $scope.$watch('vm.pagination.perPage', function(nv, ov) {
@@ -42,6 +46,12 @@ angular.module('mean.transactions').controller('TransactionsController', ['$scop
     $scope.$on('refreshTransactions', function(event, args) {
       vm.getTransactions();
     });
+
+    function resetFilters() {
+      vm.filters = {};
+
+      vm.getTransactions();
+    }
 
     function uploadFiles(files) {
       if (files && files.length) {
@@ -121,8 +131,14 @@ angular.module('mean.transactions').controller('TransactionsController', ['$scop
       }
     }
 
+    function getTransactionsByDate(date) {
+      vm.filters.date = $filter('date')(date, 'yyyy-MM-dd');
+
+      vm.getTransactions();
+    }
+
     function getTransactions() {
-      var requestParameters = TransactionService.generateGetRequestParameters(vm.pagination, vm.sorting);
+      var requestParameters = TransactionService.generateGetRequestParameters(vm.pagination, vm.sorting, vm.filters);
 
       Transactions.all(requestParameters,
           function(response) {

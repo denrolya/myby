@@ -4,8 +4,8 @@ angular
     .module('mean.transactions')
     .directive('transactionForm', transactionForm);
 
-transactionForm.$inject = ['TransactionService', 'Transactions']
-function transactionForm(TransactionService, Transactions) {
+transactionForm.$inject = ['TransactionService', 'Transactions', 'transactionFormFields']
+function transactionForm(TransactionService, Transactions, transactionFormFields) {
     return {
         restrict: 'A',
         controller: transactionFormCtrl,
@@ -16,6 +16,8 @@ function transactionForm(TransactionService, Transactions) {
 
 function transactionFormCtrl(TransactionService, Transactions) {
     var dvm = this;
+
+    dvm.transactionFormFields = transactionFormFields;
 
     dvm.registerTransaction = registerTransaction;
     dvm.toggleNewTransactionRegistration = toggleNewTransactionRegistration;

@@ -4,7 +4,8 @@ angular
     .module('mean.transactions')
     .factory('TransactionService', TransactionService);
 
-function TransactionService() {
+TransactionService.$inject = ['$filter'];
+function TransactionService($filter) {
     var service = {
         generateGetRequestParameters: generateGetRequestParameters,
         validateTransaction: validateTransaction,
@@ -17,7 +18,7 @@ function TransactionService() {
         return (transaction.amount <= 0 && (transaction.issuer == "" || transaction.issuer == undefined)) ? false : true;
     }
 
-    function generateGetRequestParameters(pagination, sorting) {
+    function generateGetRequestParameters(pagination, sorting, filters) {
         var requestParameters = [];
 
         if (pagination.currentPage != 1) {
@@ -36,8 +37,8 @@ function TransactionService() {
             requestParameters['r'] = sorting.reverse;
         }
 
-        if (sorting.searchQuery.trim() != '') {
-            requestParameters['sq'] = sorting.searchQuery.trim();
+        if (Object.keys(filters).length > 0) {
+            requestParameters['f'] = filters;
         }
 
         return requestParameters;

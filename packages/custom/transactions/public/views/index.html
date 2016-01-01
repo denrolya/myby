@@ -3,8 +3,8 @@
         <div class="form-group">
             <div class="input-group">
                 <div class="input-group-addon"><i class="fa fa-search"></i></div>
-                <input type="text" class="form-control" placeholder="Filter by comment" ng-model="vm.sorting.searchQuery" ng-change="vm.getTransactions()" ng-model-options="{debounce: 500}">
-                <div class="input-group-addon" ng-show="vm.sorting.searchQuery != ''" ng-click="vm.clearSearchQuery()"><i class="fa fa-times"></i></div>
+                <input type="text" class="form-control" placeholder="Filter by comment" ng-model="vm.filters.searchQuery" ng-change="vm.getTransactions()" ng-model-options="{debounce: 500}">
+                <div class="input-group-addon" ng-show="vm.filters.searchQuery != ''" ng-click="vm.clearSearchQuery()"><i class="fa fa-times"></i></div>
             </div>
         </div>
     </div>
@@ -21,6 +21,7 @@
     <div class="row">
         <div class="col-md-6">
             <div class="text-right" style="margin: 20px 0px;">
+                <button ng-show="vm.filters.date || vm.filters.searchQuery" class="btn btn-warning btn-sm" ng-click="vm.resetFilters()">Reset filters</button>
                 <button class="btn btn-primary btn-sm" ng-click="vm.toggleSidebar()">New transaction</button>
             </div>
         </div>
@@ -74,7 +75,11 @@
                 <tbody>
                     <tr ng-repeat="transaction in vm.transactions">
                         <td>{{ transaction.amount | number }} {{ transaction.currency == "HUF" ? "ft." : transaction.currency }}</td>
-                        <td>{{ transaction.date | date : 'yyyy-MM-dd' }}</td>
+                        <td>
+                            <a href="" ng-click="vm.getTransactionsByDate(transaction.date)">
+                                {{ transaction.date | date : 'yyyy-MM-dd' }}
+                            </a>
+                        </td>
                         <td>
                             {{ transaction.remainder | number }} {{ transaction.currency == "HUF" ? "ft." : transaction.currency }}
                         </td>
