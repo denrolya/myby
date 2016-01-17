@@ -18,6 +18,8 @@
     "angular-formly": "~7.3.9",
     "api-check": "~7.5.5",
     "angular-formly-templates-bootstrap": "~6.2.0",
-    "font-awesome": "fontawesome#~4.5.0"
+    "font-awesome": "fontawesome#~4.5.0",
+    "angular-bootstrap-datetimepicker": "~0.4.0",
+    "moment": "~2.11.1"
   }
 }

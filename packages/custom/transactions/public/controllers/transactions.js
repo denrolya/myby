@@ -5,10 +5,12 @@
 angular.module('mean.transactions').controller('TransactionsController', ['$scope', 'Global', 'Transactions', 'TransactionService', '$filter', '$aside', 'Upload', '$timeout',
   function($scope, Global, Transactions, TransactionService, $filter, $aside, Upload, $timeout) {
     var vm = this;
-    vm.global = Global;
 
+    vm.global = Global;
+    vm.filters = {};
+    vm.transactions = [];
     vm.files; vm.errFile; vm.log = '';
-    vm.sidebar;
+
     vm.pagination = {
       currentPage: 1,
       perPage: 10,
@@ -22,9 +24,7 @@ angular.module('mean.transactions').controller('TransactionsController', ['$scop
       reverse: false,
     };
 
-    vm.filters = {};
-
-    vm.transactions = [];
+    vm.date;
 
     vm.getTransactions = getTransactions;
     vm.getTransactionsByDate = getTransactionsByDate;
@@ -34,23 +34,90 @@ angular.module('mean.transactions').controller('TransactionsController', ['$scop
     vm.toggleSidebar = toggleSidebar;
     vm.uploadFiles = uploadFiles;
     vm.resetFilters = resetFilters;
+    vm.resetSorting = resetSorting;
+    vm.setTypeFilter = setTypeFilter;
 
     $scope.$watch('vm.pagination.currentPage', vm.getTransactions);
-    $scope.$watch('vm.pagination.perPage', function(nv, ov) {
-      vm.pagination.currentPage = 1;
-    });
-    $scope.$watch('vm.files', function (nv, ov) {
-      vm.uploadFiles(vm.files);
-    });
+    $scope.$watch('vm.pagination.perPage', function(nv, ov) { vm.pagination.currentPage = 1; });
+    $scope.$watch('vm.files', function (nv, ov) { vm.uploadFiles(vm.files); });
 
     $scope.$on('refreshTransactions', function(event, args) {
+      vm.resetFilters();
+
+      $scope.$broadcast('updatePage', {});
+    });
+
+    $scope.$on('updatePage', function(event, args) {
       vm.getTransactions();
     });
 
-    function resetFilters() {
-      vm.filters = {};
+    function getTransactions() {
+      var requestParameters = TransactionService.generateGetRequestParameters(vm.pagination, vm.sorting, vm.filters);
 
-      vm.getTransactions();
+      Transactions.all(requestParameters,
+          function(response) {
+            vm.transactions = response.transactions;
+            vm.pagination.totalItems = response.total;
+            vm.pagination.pagesCount = Math.ceil(response.total / vm.pagination.perPage);
+          }
+      );
+    }
+
+    function getTransactionsByDate(date) {
+      vm.filters.date = $filter('date')(date, 'yyyy-MM-dd');
+
+      $scope.$broadcast('updatePage', {});
+    }
+
+    function setPage(pageNo) {
+      vm.currentPage = pageNo;
+    }
+
+    function orderBy(field) {
+
+      if (vm.sorting.type != field) {
+        vm.sorting.reverse = false;
+        vm.sorting.type = field;
+        if (vm.pagination.currentPage != 1) {
+          vm.pagination.currentPage = 1;
+        } else {
+          $scope.$broadcast('updatePage', {});
+        }
+      } else {
+        vm.sorting.reverse = !vm.sorting.reverse;
+        $scope.$broadcast('updatePage', {});
+      }
+    }
+
+    function clearSearchQuery() {
+      vm.filters.searchQuery = '';
+
+      $scope.$broadcast('updatePage', {});
+    }
+
+    function toggleSidebar() {
+      var sidebarParameters = {
+        templateUrl: 'transactions/views/register.html',
+        controller: 'RegisterController',
+        controllerAs: 'avm',
+        placement: 'left',
+        size: 'sm',
+        resolve: {
+          resolved: function($rootScope, $q) {
+            return ($rootScope.flag) ? $q.when({stuff:'asynchronous'}) : {stuff:'synchronous'}
+          }
+        }
+      },
+      sidebar = $aside.open(sidebarParameters);
+
+      //sidebar.opened.then(function() {
+      //  console.log('client: opened');
+      //});
+      //sidebar.result.then(function(result) {
+      //  console.log('client: resolved: ' + result);
+      //}, function(reason) {
+      //  console.log('client: rejected: ' + reason);
+      //});
     }
 
     function uploadFiles(files) {
@@ -76,81 +143,29 @@ angular.module('mean.transactions').controller('TransactionsController', ['$scop
             });
           }
         }
-        vm.getTransactions();
+        $scope.$broadcast('updatePage', {});
       };
     }
 
-    function toggleSidebar() {
-      vm.sidebar = bindSidebar($aside.open(defineSidebar()));
+    function resetFilters() {
+      vm.filters = {};
+
+      $scope.$broadcast('updatePage', {});
     }
 
-    function defineSidebar() {
-      return {
-        templateUrl: 'transactions/views/register.html',
-        controller: 'RegisterController',
-        controllerAs: 'avm',
-        placement: 'left',
-        size: 'sm',
-        resolve: {
-          resolved: function($rootScope, $q) {
-            return ($rootScope.flag) ? $q.when({stuff:'asynchronous'}) : {stuff:'synchronous'}
-          }
-        }
+    function resetSorting() {
+      vm.sorting = {
+        type: 'date',
+        reverse: false,
       };
     }
 
-    function bindSidebar(sidebar) {
-      sidebar.opened.then(function() {
-        console.log('client: opened');
-      });
-      sidebar.result.then(function(result) {
-        console.log('client: resolved: ' + result);
-      }, function(reason) {
-        console.log('client: rejected: ' + reason);
-      });
+    function setTypeFilter(type) {
+      vm.resetFilters();
+
+      vm.filters.type = type;
+
+      $scope.$broadcast('updatePage', {});
     }
-
-    function clearSearchQuery() {
-      vm.sorting.searchQuery = '';
-      vm.getTransactions();
-    }
-
-    function orderBy(field) {
-
-      if (vm.sorting.type != field) {
-        vm.sorting.reverse = true;
-        vm.sorting.type = field;
-        if (vm.pagination.currentPage != 1) {
-          vm.pagination.currentPage = 1;
-        } else {
-          vm.getTransactions();
-        }
-      } else {
-        vm.sorting.reverse = !vm.sorting.reverse;
-        vm.getTransactions();
-      }
-    }
-
-    function getTransactionsByDate(date) {
-      vm.filters.date = $filter('date')(date, 'yyyy-MM-dd');
-
-      vm.getTransactions();
-    }
-
-    function getTransactions() {
-      var requestParameters = TransactionService.generateGetRequestParameters(vm.pagination, vm.sorting, vm.filters);
-
-      Transactions.all(requestParameters,
-          function(response) {
-            vm.transactions = response.transactions;
-            vm.pagination.totalItems = response.total;
-            vm.pagination.pagesCount = Math.ceil(response.total / vm.pagination.perPage);
-          }
-      );
-    }
-
-    function setPage(pageNo) {
-      vm.currentPage = pageNo;
-    };
   }
 ]);
