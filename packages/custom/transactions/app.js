@@ -27,11 +27,14 @@ Transactions.register(function(app, auth, database) {
   Transactions.aggregateAsset('css', 'transactions.css');
   Transactions.aggregateAsset('css', 'common.css');
   Transactions.aggregateAsset('css', '../../../../../../bower_components/angular-bootstrap-datetimepicker/src/css/datetimepicker.css');
+  Transactions.aggregateAsset('css', '../../../../../../bower_components/angular-chart.js/dist/angular-chart.css');
 
+  Transactions.aggregateAsset('js', '../../../../../../bower_components/Chart.js/Chart.min.js', {global:false,  weight: -1});
+  Transactions.aggregateAsset('js', '../../../../../../bower_components/angular-chart.js/angular-chart.js');
   Transactions.aggregateAsset('js', '../../../../../../bower_components/moment/moment.js', {global:false,  weight: -1});
   Transactions.aggregateAsset('js', '../../../../../../bower_components/angular-bootstrap-datetimepicker/src/js/datetimepicker.js');
 
-  Transactions.angularDependencies(['ngFileUpload', 'ui.bootstrap', 'ui.bootstrap.datetimepicker', 'formly', 'formlyBootstrap', 'ngAside']);
+  Transactions.angularDependencies(['ngFileUpload', 'ui.bootstrap', 'ui.bootstrap.datetimepicker', 'formly', 'formlyBootstrap', 'ngAside', 'chart.js']);
 
   /**
     //Uncomment to use. Requires meanio@0.3.7 or above

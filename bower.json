@@ -20,6 +20,7 @@
     "angular-formly-templates-bootstrap": "~6.2.0",
     "font-awesome": "fontawesome#~4.5.0",
     "angular-bootstrap-datetimepicker": "~0.4.0",
-    "moment": "~2.11.1"
+    "moment": "~2.11.1",
+    "angular-chart.js": "~0.8.8"
   }
 }
