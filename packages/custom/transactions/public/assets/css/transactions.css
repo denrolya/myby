@@ -22,3 +22,14 @@
 .label.label-cash {
   background-image: url('/transactions/assets/img/cash.png');
 }
+
+.filters {
+  background: #EAEAEA;
+  border: 1px solid #d1d1d1;
+  border-radius: 4px;
+  padding: 10px;
+}
+
+.filters hr {
+  margin: 2px 0;
+}

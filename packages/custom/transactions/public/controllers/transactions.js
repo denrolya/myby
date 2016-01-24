@@ -2,8 +2,8 @@
 
 
 /* jshint -W098 */
-angular.module('mean.transactions').controller('TransactionsController', ['$scope', 'Global', 'Transactions', 'TransactionService', '$filter', '$aside', 'Upload', '$timeout',
-  function($scope, Global, Transactions, TransactionService, $filter, $aside, Upload, $timeout) {
+angular.module('mean.transactions').controller('TransactionsController', ['$scope', 'Global', 'Transactions', 'TransactionService', '$filter', '$aside', 'Upload', '$timeout', 'filtersFormFields',
+  function($scope, Global, Transactions, TransactionService, $filter, $aside, Upload, $timeout, filtersFormFields) {
     var vm = this;
 
     vm.global = Global;
@@ -24,7 +24,7 @@ angular.module('mean.transactions').controller('TransactionsController', ['$scop
       reverse: false,
     };
 
-    vm.date;
+    vm.filtersFields = filtersFormFields;
 
     vm.getTransactions = getTransactions;
     vm.getTransactionsByDate = getTransactionsByDate;
@@ -36,10 +36,31 @@ angular.module('mean.transactions').controller('TransactionsController', ['$scop
     vm.resetFilters = resetFilters;
     vm.resetSorting = resetSorting;
     vm.setTypeFilter = setTypeFilter;
+    vm.filtersResetable = filtersResetable;
 
     $scope.$watch('vm.pagination.currentPage', vm.getTransactions);
+    $scope.$watch('vm.filters.searchQuery', vm.getTransactions);
     $scope.$watch('vm.pagination.perPage', function(nv, ov) { vm.pagination.currentPage = 1; });
     $scope.$watch('vm.files', function (nv, ov) { vm.uploadFiles(vm.files); });
+    $scope.$watch('vm.filters.date.from', function(nv, ov) {
+      if (vm.filters.date.from > vm.filters.date.to) {
+        var temp = vm.filters.date.from;
+        vm.filters.date.from = vm.filters.date.to;
+        vm.filters.date.to = temp;
+      }
+
+      vm.getTransactions();
+    });
+
+    $scope.$watch('vm.filters.date.to', function(nv, ov) {
+      if (vm.filters.date.from > vm.filters.date.to) {
+        var temp = vm.filters.date.from;
+        vm.filters.date.from = vm.filters.date.to;
+        vm.filters.date.to = temp;
+      }
+
+      vm.getTransactions();
+    });
 
     $scope.$on('refreshTransactions', function(event, args) {
       vm.resetFilters();
@@ -50,6 +71,10 @@ angular.module('mean.transactions').controller('TransactionsController', ['$scop
     $scope.$on('updatePage', function(event, args) {
       vm.getTransactions();
     });
+
+    function filtersResetable() {
+      return Object.keys(vm.filters).length > 0;
+    }
 
     function getTransactions() {
       var requestParameters = TransactionService.generateGetRequestParameters(vm.pagination, vm.sorting, vm.filters);
@@ -64,7 +89,8 @@ angular.module('mean.transactions').controller('TransactionsController', ['$scop
     }
 
     function getTransactionsByDate(date) {
-      vm.filters.date = $filter('date')(date, 'yyyy-MM-dd');
+      vm.filters.startDate = date;
+      vm.filters.endDate = date;
 
       $scope.$broadcast('updatePage', {});
     }

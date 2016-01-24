@@ -1,0 +1,5 @@
+<div class="input-group">
+    <div class="input-group-addon"><i class="fa fa-search"></i></div>
+    <input type="text" class="form-control" placeholder="{{ options.templateOptions.placeholder }}" ng-model="model[options.key]" ng-model-options="{debounce: 500}">
+    <div class="input-group-addon" ng-show="model[options.key]" ng-click="clear()"><i class="fa fa-times"></i></div>
+</div>

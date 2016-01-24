@@ -28,7 +28,7 @@ Transactions.register(function(app, auth, database) {
   Transactions.aggregateAsset('css', 'common.css');
   Transactions.aggregateAsset('css', '../../../../../../bower_components/angular-bootstrap-datetimepicker/src/css/datetimepicker.css');
 
-  Transactions.aggregateAsset('js', '../../../../../../bower_components/moment/moment.js');
+  Transactions.aggregateAsset('js', '../../../../../../bower_components/moment/moment.js', {global:false,  weight: -1});
   Transactions.aggregateAsset('js', '../../../../../../bower_components/angular-bootstrap-datetimepicker/src/js/datetimepicker.js');
 
   Transactions.angularDependencies(['ngFileUpload', 'ui.bootstrap', 'ui.bootstrap.datetimepicker', 'formly', 'formlyBootstrap', 'ngAside']);

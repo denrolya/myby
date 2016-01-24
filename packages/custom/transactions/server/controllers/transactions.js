@@ -30,11 +30,18 @@ module.exports = function(Transactions){
             }
 
             if (requestParameters.f.date) {
-                var startDate = (new Date(requestParameters.f.date)).setHours(0,0,0,0),
-                    endDate = (new Date(requestParameters.f.date)).setHours(23,59,59,999);
+                filterQuery['date'] = {};
 
-                filterQuery['date'] = {$gte: startDate, $lt: endDate};
+                if (requestParameters.f.date.from) {
+                    filterQuery['date']['$gte'] = (new Date(requestParameters.f.date.from)).setHours(0,0,0,0);
+                }
+
+                if (requestParameters.f.date.to) {
+                    filterQuery['date']['$lte'] = (new Date(requestParameters.f.date.to)).setHours(23,59,59,999);
+                }
             }
+
+            console.log(filterQuery);
         }
 
         Transaction
