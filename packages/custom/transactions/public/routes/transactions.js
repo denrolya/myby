@@ -23,9 +23,11 @@ angular.module('mean.transactions').config(['$meanStateProvider', '$urlRouterPro
                     denyState: 'auth.login'
                 }
             })
-            .state('transactions-upload', {
-                url: '/upload',
-                templateUrl: 'transactions/views/upload.html',
+            .state('transactions-charts', {
+                url: '/charts',
+                templateUrl: 'transactions/views/charts.html',
+                controller: 'ChartsController',
+                controllerAs: 'vm',
                 requiredCircles : {
                     circles: ['authenticated'],
                     denyState: 'auth.login'

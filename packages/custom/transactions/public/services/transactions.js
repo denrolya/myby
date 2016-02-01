@@ -21,6 +21,11 @@ function Transactions($resource) {
     register: {
       method: 'POST',
       url: '/api/transactions'
+    },
+    getMonthlyConsumptionRates: {
+      method: 'GET',
+      url: '/api/getMonthlyConsumptionRates',
+      isArray: false
     }
   });
 }

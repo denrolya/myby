@@ -12,6 +12,7 @@
         </div>
 
         <button class="btn btn-default btn-sm" ng-click="vm.toggleSidebar()">New transaction</button>
+        <a ui-sref="transactions-charts"><button class="btn btn-default btn-sm">Charts</button></a>
         <button ng-show="vm.filtersResetable()" class="btn btn-warning btn-sm pull-right" ng-click="vm.resetFilters()">Reset filters</button>
     </formly-form>
 </form>

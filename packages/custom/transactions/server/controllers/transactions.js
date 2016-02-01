@@ -11,7 +11,8 @@ module.exports = function(Transactions){
     return {
         all: getTransactions,
         uploadCSV: uploadCSV,
-        registerTransaction: createTransaction
+        registerTransaction: createTransaction,
+        getMonthlyConsumptionRates: getMonthlyConsumptionRates
     };
 
     function getTransactions(req,res) {
@@ -117,6 +118,25 @@ module.exports = function(Transactions){
 
             res.json(transaction);
         });
+    }
+
+    function getMonthlyConsumptionRates(req, res) {
+        Transaction
+            .aggregate([
+                {$match : {amount : {$lt : 0} }},
+                {$group : {
+                    _id : { month: { $month: "$date" } },
+                    amountSum : { $sum : "$amount" },
+                    average : { $avg : '$amount' }
+                }},
+                {$sort : {_id : 1 }
+            }]).exec(function(err, data) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    res.send({data :data});
+                }
+            });
     }
 };
 
