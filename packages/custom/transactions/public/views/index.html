@@ -66,7 +66,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="transaction in vm.transactions">
+                <tr ng-repeat="transaction in vm.transactions" ng-mouseenter="showDelete = true" ng-mouseleave="showDelete = false">
                     <td>{{ transaction.amount | number }} {{ transaction.currency == "HUF" ? "ft." : transaction.currency }}</td>
                     <td>
                         <a href="" ng-click="vm.getTransactionsByDate(transaction.date)">
@@ -85,6 +85,7 @@
                             <span class="label label-ppass" ng-show="transaction.isPayPass" ng-click="vm.setTypeFilter('paypass')">PayPass</span>
                             <span class="label label-credit-card" ng-show="transaction.type == 'CC'" ng-click="vm.setCardFilter('card')">Credit Card</span>
                             <span class="label label-cash" ng-show="transaction.type == 'C'"  ng-click="vm.setCashFilter('cash')">Cash</span>
+                            <a href="" ng-show="showDelete"  ng-click="vm.removeTransaction(transaction._id)"><i class="fa fa-times"></i></a>
                         </div>
                     </td>
                 </tr>

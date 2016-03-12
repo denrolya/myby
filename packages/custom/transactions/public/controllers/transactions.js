@@ -2,8 +2,8 @@
 
 
 /* jshint -W098 */
-angular.module('mean.transactions').controller('TransactionsController', ['$scope', 'Global', 'Transactions', 'TransactionService', '$filter', '$aside', 'Upload', '$timeout', 'filtersFormFields',
-  function($scope, Global, Transactions, TransactionService, $filter, $aside, Upload, $timeout, filtersFormFields) {
+angular.module('mean.transactions').controller('TransactionsController', ['$scope', 'Global', 'Transactions', 'TransactionService', '$filter', '$aside', 'Upload', '$timeout', 'filtersFormFields', 'SweetAlert',
+  function($scope, Global, Transactions, TransactionService, $filter, $aside, Upload, $timeout, filtersFormFields, SweetAlert) {
     var vm = this;
 
     $scope.labels = ["January", "February", "March", "April", "May", "June", "July"];
@@ -47,6 +47,7 @@ angular.module('mean.transactions').controller('TransactionsController', ['$scop
     vm.resetSorting = resetSorting;
     vm.setTypeFilter = setTypeFilter;
     vm.filtersResetable = filtersResetable;
+    vm.removeTransaction = removeTransaction;
 
     $scope.$watch('vm.pagination.currentPage', vm.getTransactions);
     $scope.$watch('vm.filters.searchQuery', vm.getTransactions);
@@ -202,6 +203,28 @@ angular.module('mean.transactions').controller('TransactionsController', ['$scop
       vm.filters.type = type;
 
       $scope.$broadcast('updatePage', {});
+    }
+
+    function removeTransaction(transactionId) {
+      SweetAlert.swal({
+            title: "Are you sure?",
+            text: "Your will not be able to recover this transaction!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",confirmButtonText: "Yes, delete it!",
+            cancelButtonText: "Cancel!",
+            closeOnConfirm: false,
+            closeOnCancel: false },
+          function(isConfirm){
+            if (isConfirm) {
+              Transactions.remove({id : transactionId}, function(response) {
+                SweetAlert.swal("Deleted!", "Transaction was successfully deleted.", "success");
+                $scope.$broadcast('updatePage', {});
+              });
+            } else {
+              SweetAlert.swal("Cancelled", "OK", "error");
+            }
+          });
     }
   }
 ]);

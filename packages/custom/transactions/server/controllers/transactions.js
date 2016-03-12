@@ -12,7 +12,8 @@ module.exports = function(Transactions){
         all: getTransactions,
         uploadCSV: uploadCSV,
         registerTransaction: createTransaction,
-        getMonthlyConsumptionRates: getMonthlyConsumptionRates
+        getMonthlyConsumptionRates: getMonthlyConsumptionRates,
+        removeTransaction: removeTransaction
     };
 
     function getTransactions(req,res) {
@@ -129,12 +130,24 @@ module.exports = function(Transactions){
                     amountSum : { $sum : "$amount" },
                     average : { $avg : '$amount' }
                 }},
-                {$sort : {_id : 1 }
-            }]).exec(function(err, data) {
+                {$match : {amount : {$gte : 0} }},
+                {$sort : {_id : 1 }}
+            ]).exec(function(err, data) {
                 if (err) {
                     console.log(err);
                 } else {
-                    res.send({data :data});
+                    res.send({ data : data });
+                }
+            });
+    }
+
+    function removeTransaction(req, res) {
+        Transaction
+            .find({_id : req.params.transactionId}).remove().exec(function(err, data) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    res.send(data);
                 }
             });
     }

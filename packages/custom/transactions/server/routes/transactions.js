@@ -12,6 +12,9 @@ module.exports = function (Transactions, app, auth, database) {
         .get(auth.requiresAdmin, transactionsController.all)
         .post(auth.requiresAdmin, transactionsController.registerTransaction);
 
+    app.route('/api/transactions/:transactionId')
+        .delete(auth.requiresAdmin, transactionsController.removeTransaction);
+
     app.get('/api/getMonthlyConsumptionRates', auth.requiresLogin, transactionsController.getMonthlyConsumptionRates);
 
     app.post('/api/transactions/upload', multipartyMiddleware, transactionsController.uploadCSV);

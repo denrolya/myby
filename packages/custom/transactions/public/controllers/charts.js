@@ -9,8 +9,10 @@
     function ChartsController(Transactions) {
         var vm = this;
 
-        vm.monthlyConsumptionRates = [[]];
-        vm.averageConsumptionRates = [[]];
+        vm.consumption = {
+            monthly : [[]],
+            average : [[]]
+        };
 
         vm.getMonthlyConsumptionRates = getMonthlyConsumptionRates;
 
@@ -22,8 +24,8 @@
         function getMonthlyConsumptionRates() {
             Transactions.getMonthlyConsumptionRates(function(response) {
                 angular.forEach(response.data, function(value, key) {
-                    vm.monthlyConsumptionRates[0].push(value.amountSum * (-1));
-                    vm.averageConsumptionRates[0].push(Math.floor(value.average * (-1)));
+                    vm.consumption.monthly[0].push(value.amountSum * (-1));
+                    vm.consumption.average[0].push(Math.floor(value.average * (-1)));
                 });
             });
         }

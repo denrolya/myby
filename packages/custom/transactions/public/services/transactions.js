@@ -6,13 +6,12 @@ angular
 
 Transactions.$inject = ['$resource'];
 function Transactions($resource) {
-  var requestParameters = {pn: '@pageNumber', rpp: '@resultsPerPage', sb: '@sortBy', r: '@reverse'};
-  return $resource('api/transactions', requestParameters, {
+  var requestParameters = {pn: '@pageNumber', rpp: '@resultsPerPage', sb: '@sortBy', r: '@reverse', id : '@transactionId'};
+  return $resource('api/transactions/:id', requestParameters, {
     update: { method: 'PUT' },
     all: {
       method: 'GET',
       isArray: false,
-      url: '/api/transactions',
       params: {
         sq: '@searchQuery',
         f: '@filter'
@@ -26,6 +25,9 @@ function Transactions($resource) {
       method: 'GET',
       url: '/api/getMonthlyConsumptionRates',
       isArray: false
+    },
+    remove: {
+      method: 'DELETE',
     }
   });
 }
