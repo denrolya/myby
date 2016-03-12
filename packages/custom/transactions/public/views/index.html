@@ -11,8 +11,10 @@
             </div>
         </div>
 
-        <button class="btn btn-default btn-sm" ng-click="vm.toggleSidebar()">New transaction</button>
-        <a ui-sref="transactions-charts"><button class="btn btn-default btn-sm">Charts</button></a>
+        <a class="btn btn-default btn-sm" ng-click="vm.toggleSidebar()" class="btn btn-default btn-sm">New transaction</a>
+        <a ui-sref="transactions-charts" class="btn btn-default btn-sm">Charts</a>
+        <a ng-href="{{ vm.exportTransactions('json') }}" target="_blank" class="btn btn-default btn-sm">Export to JSON</a>
+        <a ng-href="{{ vm.exportTransactions('csv') }}" target="_blank" class="btn btn-default btn-sm">Export to CSV</a>
         <button ng-show="vm.filtersResetable()" class="btn btn-warning btn-sm pull-right" ng-click="vm.resetFilters()">Reset filters</button>
     </formly-form>
 </form>

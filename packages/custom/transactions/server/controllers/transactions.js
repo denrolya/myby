@@ -5,7 +5,10 @@ var mean = require('meanio'),
     Transaction = mongoose.model('Transaction'),
     csv = require('fast-csv'),
     url = require('url'),
-    mongoosePagination = require('mongoose-pagination');
+    mongoosePagination = require('mongoose-pagination'),
+    json2csv = require('json2csv'),
+    fs = require('fs'),
+    path = require('path');
 
 module.exports = function(Transactions){
     return {
@@ -13,7 +16,8 @@ module.exports = function(Transactions){
         uploadCSV: uploadCSV,
         registerTransaction: createTransaction,
         getMonthlyConsumptionRates: getMonthlyConsumptionRates,
-        removeTransaction: removeTransaction
+        removeTransaction: removeTransaction,
+        exportTransactions: exportTransactions
     };
 
     function getTransactions(req,res) {
@@ -42,8 +46,6 @@ module.exports = function(Transactions){
                     filterQuery['date']['$lte'] = (new Date(requestParameters.f.date.to)).setHours(23,59,59,999);
                 }
             }
-
-            console.log(filterQuery);
         }
 
         Transaction
@@ -148,6 +150,72 @@ module.exports = function(Transactions){
                     console.log(err);
                 } else {
                     res.send(data);
+                }
+            });
+    }
+
+    function exportTransactions(req, res) {
+        var requestParameters = url.parse(req.url, true).query;
+
+        var sortQuery = {}, filterQuery = {}, exportTo = requestParameters.to;
+        var sortBy = (requestParameters.sb) ? requestParameters.sb : 'dateTo';
+        sortQuery[sortBy] = (requestParameters.r) === 'false' ? -1 : 1;
+
+        if (requestParameters.f) {
+            requestParameters.f = JSON.parse(requestParameters.f);
+
+            if (requestParameters.f.searchQuery) {
+                var regex = new RegExp(requestParameters.f.searchQuery, 'i');
+                filterQuery['$or'] = [{'issuer': regex}, {'comments': regex}];
+            }
+
+            if (requestParameters.f.date) {
+                filterQuery['date'] = {};
+
+                if (requestParameters.f.date.from) {
+                    filterQuery['date']['$gte'] = (new Date(requestParameters.f.date.from)).setHours(0,0,0,0);
+                }
+
+                if (requestParameters.f.date.to) {
+                    filterQuery['date']['$lte'] = (new Date(requestParameters.f.date.to)).setHours(23,59,59,999);
+                }
+            }
+        }
+
+        Transaction
+            .find(filterQuery)
+            .sort(sortQuery)
+            .paginate(requestParameters.pn, requestParameters.rpp, function(err, transactions, total) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    if (exportTo == 'csv') {
+                        json2csv({
+                            data: transactions,
+                            fields: ['accountNumber', 'type', 'amount', 'currency', 'dateFrom', 'dateTo', 'remainder', 'comments', 'issuer', 'date']
+                        }, function (err, csv) {
+                            if (err) console.log(err)
+                            else {
+                                var file = __dirname + '/../downloads/transactions.csv';
+
+                                fs.writeFile(file, csv, function (err) {
+                                    if (err) {
+                                        return console.log(err);
+                                    }
+
+                                    res.download(file);
+                                });
+                            }
+                        });
+                    } else {
+                        var file = __dirname + '/../downloads/transactions.json';
+
+                        fs.writeFile(file, JSON.stringify(transactions), function (err) {
+                            if (err) { return console.log(err); }
+
+                            res.download(file);
+                        });
+                    }
                 }
             });
     }

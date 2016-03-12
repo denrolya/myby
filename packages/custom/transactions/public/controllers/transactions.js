@@ -2,8 +2,8 @@
 
 
 /* jshint -W098 */
-angular.module('mean.transactions').controller('TransactionsController', ['$scope', 'Global', 'Transactions', 'TransactionService', '$filter', '$aside', 'Upload', '$timeout', 'filtersFormFields', 'SweetAlert',
-  function($scope, Global, Transactions, TransactionService, $filter, $aside, Upload, $timeout, filtersFormFields, SweetAlert) {
+angular.module('mean.transactions').controller('TransactionsController', ['$scope', 'Global', 'Transactions', 'TransactionService', '$filter', '$aside', 'Upload', '$timeout', 'filtersFormFields', 'SweetAlert', '$httpParamSerializer',
+  function($scope, Global, Transactions, TransactionService, $filter, $aside, Upload, $timeout, filtersFormFields, SweetAlert, $httpParamSerializer) {
     var vm = this;
 
     $scope.labels = ["January", "February", "March", "April", "May", "June", "July"];
@@ -48,6 +48,7 @@ angular.module('mean.transactions').controller('TransactionsController', ['$scop
     vm.setTypeFilter = setTypeFilter;
     vm.filtersResetable = filtersResetable;
     vm.removeTransaction = removeTransaction;
+    vm.exportTransactions = exportTransactions;
 
     $scope.$watch('vm.pagination.currentPage', vm.getTransactions);
     $scope.$watch('vm.filters.searchQuery', vm.getTransactions);
@@ -203,6 +204,12 @@ angular.module('mean.transactions').controller('TransactionsController', ['$scop
       vm.filters.type = type;
 
       $scope.$broadcast('updatePage', {});
+    }
+
+    function exportTransactions(exportTo) {
+      var requestParameters = TransactionService.generateGetRequestParameters(vm.pagination, vm.sorting, vm.filters);
+
+      return '/api/transactions/export?' + $httpParamSerializer(requestParameters) + '&to=' + exportTo;
     }
 
     function removeTransaction(transactionId) {

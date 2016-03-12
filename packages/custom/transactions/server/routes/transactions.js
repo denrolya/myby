@@ -8,6 +8,9 @@ var multiparty = require('connect-multiparty'),
 module.exports = function (Transactions, app, auth, database) {
     var transactionsController = require('../controllers/transactions')(Transactions);
 
+    app.route('/api/transactions/export')
+        .get(transactionsController.exportTransactions);
+
     app.route('/api/transactions')
         .get(auth.requiresAdmin, transactionsController.all)
         .post(auth.requiresAdmin, transactionsController.registerTransaction);
